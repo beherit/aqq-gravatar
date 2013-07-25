@@ -661,41 +661,6 @@ object FirstRunForm: TFirstRunForm
     ExplicitTop = 173
     ExplicitWidth = 312
   end
-  object SaveButton: TsButton
-    Left = 198
-    Top = 146
-    Width = 75
-    Height = 25
-    Caption = 'Zako'#324'cz'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
-    Font.Style = [fsBold]
-    ParentFont = False
-    TabOrder = 7
-    Visible = False
-    OnClick = SaveButtonClick
-    SkinData.SkinSection = 'BUTTON'
-  end
-  object PrevButton: TsButton
-    Left = 117
-    Top = 146
-    Width = 75
-    Height = 25
-    Action = aPrevButton
-    TabOrder = 8
-    SkinData.SkinSection = 'BUTTON'
-  end
-  object NextButton: TsButton
-    Left = 198
-    Top = 146
-    Width = 75
-    Height = 25
-    Action = aNextButton
-    TabOrder = 6
-    SkinData.SkinSection = 'BUTTON'
-  end
   object Panel6: TsPanel
     Left = 0
     Top = 0
@@ -998,33 +963,6 @@ object FirstRunForm: TFirstRunForm
     TabOrder = 2
     Visible = False
     SkinData.SkinSection = 'PANEL'
-    object DefaultAvatarBevel3: TsBevel
-      Left = 222
-      Top = 86
-      Width = 34
-      Height = 34
-      Visible = False
-    end
-    object DefaultAvatarBevel2: TsBevel
-      Left = 184
-      Top = 86
-      Width = 34
-      Height = 34
-      Visible = False
-    end
-    object DefaultAvatarBevel1: TsBevel
-      Left = 222
-      Top = 48
-      Width = 34
-      Height = 34
-      Visible = False
-    end
-    object DefaultAvatarBevel0: TsBevel
-      Left = 184
-      Top = 48
-      Width = 34
-      Height = 34
-    end
     object DefaultAvatarLabel: TsLabel
       Left = 8
       Top = 8
@@ -1035,12 +973,44 @@ object FirstRunForm: TFirstRunForm
         'lnym awataram ma by'#263':'
       WordWrap = True
     end
+    object DefaultAvatarBevel0: TsBevel
+      Left = 183
+      Top = 49
+      Width = 37
+      Height = 37
+      Shape = bsFrame
+    end
+    object DefaultAvatarBevel1: TsBevel
+      Left = 221
+      Top = 49
+      Width = 37
+      Height = 37
+      Shape = bsFrame
+      Visible = False
+    end
+    object DefaultAvatarBevel2: TsBevel
+      Left = 183
+      Top = 87
+      Width = 37
+      Height = 37
+      Shape = bsFrame
+      Visible = False
+    end
+    object DefaultAvatarBevel3: TsBevel
+      Left = 221
+      Top = 87
+      Width = 37
+      Height = 37
+      Shape = bsFrame
+      Visible = False
+    end
     object DefaultAvatarImage0: TImage
       Left = 185
-      Top = 49
+      Top = 51
       Width = 32
       Height = 32
       Cursor = crHandPoint
+      AutoSize = True
       Picture.Data = {
         0A544A504547496D616765EA040000FFD8FFE000104A46494600010100000100
         010000FFFE003B43524541544F523A2067642D6A7065672076312E3020287573
@@ -1086,10 +1056,11 @@ object FirstRunForm: TFirstRunForm
     end
     object DefaultAvatarImage1: TImage
       Left = 223
-      Top = 49
+      Top = 51
       Width = 32
       Height = 32
       Cursor = crHandPoint
+      AutoSize = True
       Picture.Data = {
         0B54504E474772617068696336100000424D3610000000000000360000002800
         0000200000002000000001002000000000000010000000000000000000000000
@@ -1226,10 +1197,11 @@ object FirstRunForm: TFirstRunForm
     end
     object DefaultAvatarImage2: TImage
       Left = 185
-      Top = 87
+      Top = 89
       Width = 32
       Height = 32
       Cursor = crHandPoint
+      AutoSize = True
       Picture.Data = {
         0B54504E4747726170686963360C0000424D360C000000000000360000002800
         000020000000200000000100180000000000000C000000000000000000000000
@@ -1334,10 +1306,11 @@ object FirstRunForm: TFirstRunForm
     end
     object DefaultAvatarImage3: TImage
       Left = 223
-      Top = 87
+      Top = 89
       Width = 32
       Height = 32
       Cursor = crHandPoint
+      AutoSize = True
       Picture.Data = {
         0B54504E4747726170686963360C0000424D360C000000000000360000002800
         000020000000200000000100180000000000000C000000000000000000000000
@@ -1687,6 +1660,41 @@ object FirstRunForm: TFirstRunForm
       WordWrap = True
     end
   end
+  object SaveButton: TsButton
+    Left = 198
+    Top = 146
+    Width = 75
+    Height = 25
+    Caption = 'Zako'#324'cz'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'Tahoma'
+    Font.Style = [fsBold]
+    ParentFont = False
+    TabOrder = 7
+    Visible = False
+    OnClick = SaveButtonClick
+    SkinData.SkinSection = 'BUTTON'
+  end
+  object PrevButton: TsButton
+    Left = 117
+    Top = 146
+    Width = 75
+    Height = 25
+    Action = aPrevButton
+    TabOrder = 8
+    SkinData.SkinSection = 'BUTTON'
+  end
+  object NextButton: TsButton
+    Left = 198
+    Top = 146
+    Width = 75
+    Height = 25
+    Action = aNextButton
+    TabOrder = 6
+    SkinData.SkinSection = 'BUTTON'
+  end
   object ActionList: TActionList
     Top = 144
     object aSaveSettings: TAction
@@ -1723,6 +1731,7 @@ object FirstRunForm: TFirstRunForm
   end
   object sSkinManager: TsSkinManager
     ExtendedBorders = True
+    IsDefault = False
     Active = False
     InternalSkins = <>
     MenuSupport.IcoLineSkin = 'ICOLINE'

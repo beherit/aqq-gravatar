@@ -683,31 +683,31 @@ object GravatarForm: TGravatarForm
       object DefaultAvatarBevel0: TsBevel
         Left = 183
         Top = 49
-        Width = 36
-        Height = 36
+        Width = 37
+        Height = 37
         Shape = bsFrame
       end
       object DefaultAvatarBevel1: TsBevel
         Left = 221
         Top = 49
-        Width = 36
-        Height = 36
+        Width = 37
+        Height = 37
         Shape = bsFrame
         Visible = False
       end
       object DefaultAvatarBevel2: TsBevel
         Left = 183
         Top = 87
-        Width = 36
-        Height = 36
+        Width = 37
+        Height = 37
         Shape = bsFrame
         Visible = False
       end
       object DefaultAvatarBevel3: TsBevel
         Left = 221
         Top = 87
-        Width = 36
-        Height = 36
+        Width = 37
+        Height = 37
         Shape = bsFrame
         Visible = False
       end
@@ -1438,10 +1438,15 @@ object GravatarForm: TGravatarForm
     ProxyParams.BasicAuthentication = False
     ProxyParams.ProxyPort = 0
     Request.ContentLength = -1
+    Request.ContentRangeEnd = -1
+    Request.ContentRangeStart = -1
+    Request.ContentRangeInstanceLength = -1
     Request.Pragma = 'no-cache'
     Request.Accept = '*/*'
     Request.BasicAuthentication = False
     Request.UserAgent = 'AQQ IM Plugin: Gravatar (+http://beherit.pl)'
+    Request.Ranges.Units = 'bytes'
+    Request.Ranges = <>
     HTTPOptions = [hoForceEncodeParams]
     Top = 184
   end
@@ -1464,11 +1469,6 @@ object GravatarForm: TGravatarForm
     object aAllowApply: TAction
       Caption = 'aAllowApply'
       OnExecute = aAllowApplyExecute
-    end
-    object aPageControlSheetChange: TAction
-      Caption = 'aPageControlSheetChange'
-      ShortCut = 16393
-      OnExecute = aPageControlSheetChangeExecute
     end
     object aDefaultAvatar0: TAction
       Caption = 'aDefaultAvatar0'

@@ -1,3 +1,9 @@
+1.2.0.0
+-----
+* Przepisanie wtyczki pod kompilator Embarcadero C++ Builder XE3.
+* Aktualizacja komponentów AlphaControls do najnowszej dostêpnej wersji (7.70).
+* Inne mniej wa¿ne zmiany w kodzie.
+
 1.1.3.0
 -----
 * Wtyczka posiada w³asn¹ ikonê pokazywan¹ w ustawieniach komunikatora na liœcie wtyczek.

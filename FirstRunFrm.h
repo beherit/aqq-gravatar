@@ -15,12 +15,13 @@
 #include "sRadioButton.hpp"
 #include "sSkinManager.hpp"
 #include "sSkinProvider.hpp"
-#include <ActnList.hpp>
-#include <Classes.hpp>
-#include <Controls.hpp>
-#include <ExtCtrls.hpp>
-#include <jpeg.hpp>
-#include <StdCtrls.hpp>
+#include <System.Actions.hpp>
+#include <System.Classes.hpp>
+#include <Vcl.ActnList.hpp>
+#include <Vcl.Controls.hpp>
+#include <Vcl.ExtCtrls.hpp>
+#include <Vcl.Imaging.jpeg.hpp>
+#include <Vcl.StdCtrls.hpp>
 //---------------------------------------------------------------------------
 class TFirstRunForm : public TForm
 {
@@ -44,22 +45,14 @@ __published:	// IDE-managed Components
 	TsPanel *Panel3;
 	TsLabel *DefaultAvatarLabel;
 	TsRadioButton *DefaultAvatarRadioButton0;
-	TImage *DefaultAvatarImage0;
 	TsRadioButton *DefaultAvatarRadioButton1;
-	TImage *DefaultAvatarImage1;
 	TsRadioButton *DefaultAvatarRadioButton2;
-	TImage *DefaultAvatarImage2;
-	TImage *DefaultAvatarImage3;
 	TsRadioButton *DefaultAvatarRadioButton3;
 	TsPanel *Panel4;
 	TsLabel *IntervalLabel;
 	TsComboBox *IntervalComboBox;
 	TsCheckBox *InfoSuccessCheckBox;
 	TsPanel *Panel5;
-	TsBevel *DefaultAvatarBevel0;
-	TsBevel *DefaultAvatarBevel2;
-	TsBevel *DefaultAvatarBevel3;
-	TsBevel *DefaultAvatarBevel1;
 	TsLabel *InfoLabel;
 	TsCheckBox *InfoFailCheckBox;
 	TsLabel *AccountsLabel;
@@ -80,6 +73,14 @@ __published:	// IDE-managed Components
 	TAction *aDefaultAvatar2;
 	TAction *aDefaultAvatar3;
 	TsCheckBox *ForceUpdateCheckBox;
+	TsBevel *DefaultAvatarBevel0;
+	TsBevel *DefaultAvatarBevel1;
+	TsBevel *DefaultAvatarBevel2;
+	TsBevel *DefaultAvatarBevel3;
+	TImage *DefaultAvatarImage0;
+	TImage *DefaultAvatarImage1;
+	TImage *DefaultAvatarImage2;
+	TImage *DefaultAvatarImage3;
 	void __fastcall SaveButtonClick(TObject *Sender);
 	void __fastcall GetMode1RadioButtonClick(TObject *Sender);
 	void __fastcall GetMode0RadioButtonClick(TObject *Sender);

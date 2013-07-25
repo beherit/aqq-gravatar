@@ -3,13 +3,6 @@
 #define GravatarFrmH
 //---------------------------------------------------------------------------
 #include "acPNG.hpp"
-#include "IdAntiFreeze.hpp"
-#include "IdAntiFreezeBase.hpp"
-#include "IdBaseComponent.hpp"
-#include "IdComponent.hpp"
-#include "IdHTTP.hpp"
-#include "IdTCPClient.hpp"
-#include "IdTCPConnection.hpp"
 #include "sBevel.hpp"
 #include "sButton.hpp"
 #include "sCheckBox.hpp"
@@ -22,13 +15,21 @@
 #include "sRadioButton.hpp"
 #include "sSkinManager.hpp"
 #include "sSkinProvider.hpp"
-#include <ActnList.hpp>
-#include <Classes.hpp>
-#include <ComCtrls.hpp>
-#include <Controls.hpp>
-#include <ExtCtrls.hpp>
-#include <jpeg.hpp>
-#include <StdCtrls.hpp>
+#include <IdAntiFreezeBase.hpp>
+#include <IdBaseComponent.hpp>
+#include <IdComponent.hpp>
+#include <IdHTTP.hpp>
+#include <IdTCPClient.hpp>
+#include <IdTCPConnection.hpp>
+#include <System.Actions.hpp>
+#include <System.Classes.hpp>
+#include <Vcl.ActnList.hpp>
+#include <Vcl.ComCtrls.hpp>
+#include <Vcl.Controls.hpp>
+#include <Vcl.ExtCtrls.hpp>
+#include <Vcl.IdAntiFreeze.hpp>
+#include <Vcl.Imaging.jpeg.hpp>
+#include <Vcl.StdCtrls.hpp>
 //---------------------------------------------------------------------------
 class TGravatarForm : public TForm
 {
@@ -82,7 +83,6 @@ __published:	// IDE-managed Components
 	TAction *aDefaultAvatar1;
 	TAction *aDefaultAvatar2;
 	TAction *aDefaultAvatar3;
-	TAction *aPageControlSheetChange;
 	TAction *aAllowApply;
 	TIdAntiFreeze *IdAntiFreeze;
 	TsCheckBox *ForceUpdateCheckBox;
@@ -107,7 +107,6 @@ __published:	// IDE-managed Components
 	void __fastcall aDefaultAvatar2Execute(TObject *Sender);
 	void __fastcall aDefaultAvatar3Execute(TObject *Sender);
 	void __fastcall OKButtonClick(TObject *Sender);
-	void __fastcall aPageControlSheetChangeExecute(TObject *Sender);
 	void __fastcall aAllowApplyExecute(TObject *Sender);
 	void __fastcall ForceUpdateCheckBoxClick(TObject *Sender);
 private:	// User declarations
