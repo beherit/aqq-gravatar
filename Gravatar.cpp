@@ -7,7 +7,6 @@
 #include "GravatarFrm.h"
 #include "FirstRunFrm.h"
 #include "fstream.h"
-#include <inifiles.hpp>
 #include <IdHashMessageDigest.hpp>
 #include <boost\scoped_ptr.hpp>
 //---------------------------------------------------------------------------
@@ -18,23 +17,28 @@ int WINAPI DllEntryPoint(HINSTANCE hinst, unsigned long reason, void* lpReserved
 }
 //---------------------------------------------------------------------------
 
-//Uchwyty do form wtyczki
-TGravatarForm *hGravatarForm;
-TFirstRunForm *hFirstRun;
-//Struktury glowne
+//Uchwyt-do-form-------------------------------------------------------------
+TGravatarForm* hGravatarForm;
+TFirstRunForm* hFirstRun;
+//Struktury-glowne-----------------------------------------------------------
 TPluginLink PluginLink;
 TPluginInfo PluginInfo;
+//---------------------------------------------------------------------------
+//Sciezka do pliku ustawien
+UnicodeString SettingsFileDir;
 //SETTINGS-------------------------------------------------------------------
-int GetMode;
+bool GetMode;
 UnicodeString StaticEmail;
 int DefaultAvatar;
 bool ForceUpdate;
 bool InfoSuccess;
 bool InfoFail;
-int AccountsMode;
+bool AccountsMode;
 UnicodeString Accounts;
+//FORWARD-AQQ-HOOKS----------------------------------------------------------
+int __stdcall OnModulesLoaded(WPARAM wParam, LPARAM lParam);
+int __stdcall OnThemeChanged(WPARAM wParam, LPARAM lParam);
 //---------------------------------------------------------------------------
-bool FirstRun;
 
 //Pobieranie sciezki do skorki kompozycji
 UnicodeString GetThemeSkinDir()
@@ -42,26 +46,11 @@ UnicodeString GetThemeSkinDir()
   return StringReplace((wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETTHEMEDIR,0,0)), "\\", "\\\\", TReplaceFlags() << rfReplaceAll) + "\\\\Skin";
 }
 //---------------------------------------------------------------------------
-//Pobieranie sciezki katalogu prywatnego uzytkownika
+
+//Pobieranie sciezki katalogu prywatnego wtyczek
 UnicodeString GetPluginUserDir()
 {
-  return StringReplace((wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETPLUGINUSERDIR,0,0)), "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
-}
-//---------------------------------------------------------------------------
-//Pobieranie sciezki katalogu prywatnego uzytkownika
-UnicodeString GetPluginUserDirW()
-{
-  return (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETPLUGINUSERDIR,0,0));
-}
-//---------------------------------------------------------------------------
-UnicodeString GetContactsUserDir()
-{
-  return StringReplace((wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETTHEMEDIR,0,0)), "\\", "\\\\", TReplaceFlags() << rfReplaceAll) + "\\\\Data\\\\Contacts\\\\";
-}
-//---------------------------------------------------------------------------
-UnicodeString GetAvatarsUserDir()
-{
-  return StringReplace((wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETTHEMEDIR,0,0)), "\\", "\\\\", TReplaceFlags() << rfReplaceAll) + "\\\\Data\\\\Avatars\\\\";
+  return StringReplace((wchar_t*)PluginLink.CallService(AQQ_FUNCTION_GETPLUGINUSERDIR,0,0), "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
 }
 //---------------------------------------------------------------------------
 
@@ -93,48 +82,6 @@ bool ChkNativeEnabled()
 }
 //---------------------------------------------------------------------------
 
-//Zmiana skorki wtyczki
-void ChangePluginSkin()
-{
-  if(hGravatarForm)
-  {
-	UnicodeString ThemeSkinDir = GetThemeSkinDir();
-	if((FileExists(ThemeSkinDir + "\\\\Skin.asz"))&&(!ChkNativeEnabled()))
-	{
-	  ThemeSkinDir = StringReplace(ThemeSkinDir, "\\\\", "\\", TReplaceFlags() << rfReplaceAll);
-	  hGravatarForm->sSkinManager->SkinDirectory = ThemeSkinDir;
-	  hGravatarForm->sSkinManager->SkinName = "Skin.asz";
-	  hGravatarForm->sSkinProvider->DrawNonClientArea = ChkSkinEnabled();
-	  hGravatarForm->sSkinManager->Active = true;
-	}
-	else
-	 hGravatarForm->sSkinManager->Active = false;
-  }
-  if(hFirstRun)
-  {
-	UnicodeString ThemeSkinDir = GetThemeSkinDir();
-	if((FileExists(ThemeSkinDir + "\\\\Skin.asz"))&&(!ChkNativeEnabled()))
-	{
-	  ThemeSkinDir = StringReplace(ThemeSkinDir, "\\\\", "\\", TReplaceFlags() << rfReplaceAll);
-	  hFirstRun->sSkinManager->SkinDirectory = ThemeSkinDir;
-	  hFirstRun->sSkinManager->SkinName = "Skin.asz";
-	  hFirstRun->sSkinProvider->DrawNonClientArea = ChkSkinEnabled();
-	  hFirstRun->sSkinManager->Active = true;
-	}
-	else
-	 hFirstRun->sSkinManager->Active = false;
-  }
-}
-//---------------------------------------------------------------------------
-
-//Hook na zmianê kompozycji
-int __stdcall OnThemeChanged (WPARAM wParam, LPARAM lParam)
-{
-  ChangePluginSkin();
-  return 0;
-}
-//---------------------------------------------------------------------------
-
 //Ustalanie typu pliku graficznego (zmienne)
 struct TMagicWordInfo
 {
@@ -145,16 +92,16 @@ struct TMagicWordInfo
 };
 static const int iTypes = 5;
 static const TMagicWordInfo cstMagicWords[iTypes] = {
-    {6, 0, "\x47\x49\x46\x38\x39\x61", L"GIF89a"},
-    {6, 0, "\x47\x49\x46\x38\x37\x61", L"GIF87a"},
-    {4, 6, "\x4A\x46\x49\x46", L"JPEG/JFIF"},
-    {8, 0, "\211PNG\r\n\032\n", L"PNG"},
-    {2, 0, "BM", L"Bitmap"}
+	{6, 0, "\x47\x49\x46\x38\x39\x61", L"GIF89a"},
+	{6, 0, "\x47\x49\x46\x38\x37\x61", L"GIF87a"},
+	{4, 6, "\x4A\x46\x49\x46", L"JPEG/JFIF"},
+	{8, 0, "\211PNG\r\n\032\n", L"PNG"},
+	{2, 0, "BM", L"Bitmap"}
 };
 //---------------------------------------------------------------------------
 
 //Ustalanie typu pliku graficznego
-int GetFileType(wchar_t *wcPath)
+int GetFileType(wchar_t* wcPath)
 {
   FILE *fh;
   if(!(fh = _wfopen(wcPath, L"rb")))
@@ -194,12 +141,12 @@ UnicodeString MD5(const UnicodeString Text)
 }
 //---------------------------------------------------------------------------
 
-//Oblicznie MD5 pliku
+//Obliczanie sumy kontrolnej pliku
 UnicodeString MD5File(const UnicodeString FileName)
 {
   if(FileExists(FileName))
   {
-    String Result;
+	String Result;
     TFileStream *fs;
 
     fs = new TFileStream(FileName, fmOpenRead | fmShareDenyWrite);
@@ -214,16 +161,108 @@ UnicodeString MD5File(const UnicodeString FileName)
 	  {
 	    delete idmd5;
 	  }
-    }
+	}
 	__finally
-    {
+	{
 	  delete fs;
-    }
+	}
 
-    return Result;
+	return Result;
   }
   else
    return 0;
+}
+//---------------------------------------------------------------------------
+
+//Zapisywanie zasobów
+bool SaveResourceToFile(char *FileName, char *res)
+{
+  HRSRC hrsrc = FindResource(HInstance, res, RT_RCDATA);
+  if(!hrsrc) return false;
+  DWORD size = SizeofResource(HInstance, hrsrc);
+  HGLOBAL hglob = LoadResource(HInstance, hrsrc);
+  LPVOID rdata = LockResource(hglob);
+  HANDLE hFile = CreateFile(FileName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+  DWORD writ;
+  WriteFile(hFile, rdata, size, &writ, NULL);
+  CloseHandle(hFile);
+  return true;
+}
+//---------------------------------------------------------------------------
+
+//Hook na zaladowanie wszystkich modulow w AQQ
+int __stdcall OnModulesLoaded (WPARAM wParam, LPARAM lParam)
+{
+  //Jezeli nie skonfigurowano jeszcze wtyczki
+  if(!FileExists(SettingsFileDir))
+  {
+	//Przypisanie uchwytu do okna pierwszego uruchomienia wtyczki
+	if(!hFirstRun)
+	{
+	  Application->Handle = (HWND)FirstRunForm;
+	  hFirstRun = new TFirstRunForm(Application);
+	}
+	//Pokazanie okna pierwszego uruchomienia wtyczki
+	hFirstRun->Show();
+  }
+  //Wtyczka zostala juz wczesniej skonfigurowana
+  else
+  {
+	//Przypisanie uchwytu do okna ustawien
+	if(!hGravatarForm)
+	{
+	  Application->Handle = (HWND)GravatarForm;
+	  hGravatarForm = new TGravatarForm(Application);
+	}
+	//Wlaczenie timera
+	hGravatarForm->StartTimer->Enabled = true;
+  }
+
+  return 0;
+}
+//---------------------------------------------------------------------------
+
+//Hook na zmianê kompozycji
+int __stdcall OnThemeChanged (WPARAM wParam, LPARAM lParam)
+{
+  //Pobieranie sciezki nowej aktywnej kompozycji
+  UnicodeString ThemeDir = StringReplace((wchar_t*)lParam, "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
+  //Zmiana skorki wtyczki dla okna ustawien
+  if(hGravatarForm)
+  {
+	//Wlaczenie skorkowania
+	if((FileExists(ThemeDir + "\\\\Skin.asz"))&&(!ChkNativeEnabled()))
+	{
+	  UnicodeString ThemeSkinDir = ThemeDir+"\\\\Skin";
+	  ThemeSkinDir = StringReplace(ThemeSkinDir, "\\\\", "\\", TReplaceFlags() << rfReplaceAll);
+	  hGravatarForm->sSkinManager->SkinDirectory = ThemeSkinDir;
+	  hGravatarForm->sSkinManager->SkinName = "Skin.asz";
+	  hGravatarForm->sSkinProvider->DrawNonClientArea = ChkSkinEnabled();
+	  hGravatarForm->sSkinManager->Active = true;
+	}
+	//Wylaczenie skorkowania
+	else
+	 hGravatarForm->sSkinManager->Active = false;
+  }
+  //Zmiana skorki wtyczki dla okna pierwszego uruchomienia wtyczki
+  if(hFirstRun)
+  {
+	//Wlaczenie skorkowania
+	if((FileExists(ThemeDir + "\\\\Skin.asz"))&&(!ChkNativeEnabled()))
+	{
+	  UnicodeString ThemeSkinDir = ThemeDir+"\\\\Skin";
+	  ThemeSkinDir = StringReplace(ThemeSkinDir, "\\\\", "\\", TReplaceFlags() << rfReplaceAll);
+	  hFirstRun->sSkinManager->SkinDirectory = ThemeSkinDir;
+	  hFirstRun->sSkinManager->SkinName = "Skin.asz";
+	  hFirstRun->sSkinProvider->DrawNonClientArea = ChkSkinEnabled();
+	  hFirstRun->sSkinManager->Active = true;
+	}
+	//Wylaczenie skorkowania
+	else
+	 hFirstRun->sSkinManager->Active = false;
+  }
+
+  return 0;
 }
 //---------------------------------------------------------------------------
 
@@ -233,6 +272,7 @@ void ShowUpdateMessage(UnicodeString AccountJID)
   if(!ForceUpdate)
   {
 	if(AccountJID.Pos("@plugin.gg")) AccountJID = "GG " + AccountJID.Delete(AccountJID.Pos("@plugin.gg"),AccountJID.Length());
+	else if(AccountJID.Pos("@skype.plugin")) AccountJID = "Skype " + AccountJID.Delete(AccountJID.Pos("@skype.plugin"),AccountJID.Length());
 	//else AccountJID = "Jabber " + AccountJID;
 	TPluginShowInfo PluginShowInfo;
 	PluginShowInfo.cbSize = sizeof(TPluginShowInfo);
@@ -251,6 +291,7 @@ void ShowFailMessage(UnicodeString AccountJID)
   if(!ForceUpdate)
   {
 	if(AccountJID.Pos("@plugin.gg")) AccountJID = "GG " + AccountJID.Delete(AccountJID.Pos("@plugin.gg"),AccountJID.Length());
+	else if(AccountJID.Pos("@skype.plugin")) AccountJID = "Skype " + AccountJID.Delete(AccountJID.Pos("@skype.plugin"),AccountJID.Length());
 	//else AccountJID = "Jabber " + AccountJID;
 	TPluginShowInfo PluginShowInfo;
 	PluginShowInfo.cbSize = sizeof(TPluginShowInfo);
@@ -314,7 +355,7 @@ void RefreshAvatars()
   UnicodeString AvatarFile;
   //Struktura zawierajaca informacje o danym koncie
   TPluginStateChange PluginStateChange;
-  //Tworzenie uchwytu do formy
+  //Tworzenie uchwytu do okna
   if(!hGravatarForm)
   {
 	Application->Handle = (HWND)GravatarForm;
@@ -495,39 +536,13 @@ void RefreshAvatars()
 }
 //---------------------------------------------------------------------------
 
-//Odswiezenie ustawien
-void RefreshSettings()
-{
-  //Odczyt ustawien
-  TIniFile *Ini = new TIniFile(GetPluginUserDir() + "\\\\Gravatar\\\\Settings.ini");
-  GetMode = Ini->ReadInteger("Settings","GetMode",0);
-  StaticEmail = Ini->ReadString("Settings","StaticEmail","");
-  DefaultAvatar = Ini->ReadInteger("Settings","DefaultAvatar",0);
-  int Interval = Ini->ReadInteger("Settings","Interval",0);
-  ForceUpdate = Ini->ReadBool("Settings","ForceUpdate",false);
-  InfoSuccess = Ini->ReadBool("Settings","InfoSuccess",true);
-  InfoFail = Ini->ReadBool("Settings","InfoFail",false);
-  AccountsMode = Ini->ReadInteger("Settings","AccountsMode",0);
-  Accounts = Ini->ReadString("Settings","Accounts","");
-  delete Ini;
-  //Zmiana timera
-  if(hGravatarForm==NULL)
-  {
-	Application->Handle = (HWND)GravatarForm;
-	hGravatarForm = new TGravatarForm(Application);
-  }
-  hGravatarForm->Timer->Enabled = false;
-  hGravatarForm->Timer->Interval = 3600000 * Interval;
-  hGravatarForm->Timer->Enabled = true;
-}
-//---------------------------------------------------------------------------
-
 //Pobieranie listy kont
 void GetAccountList(bool FirstRun)
 {
-  //Pierwsze uruchomienie
+  //Jezeli nie skonfigurowano jeszcze wtyczki
   if(FirstRun)
   {
+	//Przypisanie uchwytu do okna pierwszego uruchomienia wtyczki
 	if(!hFirstRun)
 	{
 	  Application->Handle = (HWND)FirstRunForm;
@@ -546,9 +561,10 @@ void GetAccountList(bool FirstRun)
 	  hFirstRun->AccountsCheckListBox->Items->Add((wchar_t*)PluginStateChange.JID);
 	}
   }
-  //Ustawienia wtyczki
+  //Wtyczka zostala juz wczesniej skonfigurowana
   else
   {
+	//Przypisanie uchwytu do okna ustawien
 	if(!hGravatarForm)
 	{
 	  Application->Handle = (HWND)GravatarForm;
@@ -570,108 +586,97 @@ void GetAccountList(bool FirstRun)
 }
 //---------------------------------------------------------------------------
 
-int __stdcall OnModulesLoaded (WPARAM wParam, LPARAM lParam)
+//Odczyt ustawien wtyczki
+void LoadSettings(bool OnLoad)
 {
-  //Pierwsze uruchomienie
-  if(FirstRun)
-  {
-	if(!hFirstRun)
-	{
-	  Application->Handle = (HWND)FirstRunForm;
-	  hFirstRun = new TFirstRunForm(Application);
-	}
-	hFirstRun->Show();
-  }
-  //Normalne uruchomienie
-  else
-  {
-	if(!hGravatarForm)
-	{
-	  Application->Handle = (HWND)GravatarForm;
-	  hGravatarForm = new TGravatarForm(Application);
-	}
-	hGravatarForm->StartTimer->Enabled = true;
-  }
-
-  return 0;
-}
-//---------------------------------------------------------------------------
-
-extern "C" int __declspec(dllexport) __stdcall Load(PPluginLink Link)
-{
-  PluginLink = *Link;
-  //Sciezka katalogu prywatnego uzytkownika
-  UnicodeString Dir = GetPluginUserDir();
-  //Tworzenie katalogu dla ustawien
-  if(!DirectoryExists(Dir + "\\\\Gravatar"))
-   CreateDir(Dir + "\\\\Gravatar");
-
-  if(!FileExists(Dir + "\\\\Gravatar\\\\Settings.ini"))
-  {
-	FirstRun = true;
-  }
-  else
-  {
-	//Odczyt ustawien
-	TIniFile *Ini = new TIniFile(Dir + "\\\\Gravatar\\\\Settings.ini");
-	GetMode = Ini->ReadInteger("Settings","GetMode",0);
-	StaticEmail = Ini->ReadString("Settings","StaticEmail","");
-	DefaultAvatar = Ini->ReadInteger("Settings","DefaultAvatar",0);
-	int Interval = Ini->ReadInteger("Settings","Interval",0);
-	if(hGravatarForm==NULL)
-	{
-	  Application->Handle = (HWND)GravatarForm;
-	  hGravatarForm = new TGravatarForm(Application);
-	}
-	hGravatarForm->Timer->Interval = 3600000 * Interval;
-    ForceUpdate = Ini->ReadBool("Settings","ForceUpdate",false);
-	InfoSuccess = Ini->ReadBool("Settings","InfoSuccess",true);
-	InfoFail = Ini->ReadBool("Settings","InfoFail",false);
-	AccountsMode = Ini->ReadInteger("Settings","AccountsMode",0);
-	Accounts = Ini->ReadString("Settings","Accounts","");
-	delete Ini;
-  }
-  //Hook na zmianê kompozycji
-  PluginLink.HookEvent(AQQ_SYSTEM_THEMECHANGED, OnThemeChanged);
-  //Hook na zaladowanie wszystkich modulow w AQQ
-  PluginLink.HookEvent(AQQ_SYSTEM_MODULESLOADED,OnModulesLoaded);
-  //Wszystkie moduly juz zaladowane
-  if(PluginLink.CallService(AQQ_SYSTEM_MODULESLOADED,0,0))
-  {
-	//Pierwsze uruchomienie
-	if(FirstRun)
-	{
-	  if(!hFirstRun)
-	  {
-		Application->Handle = (HWND)FirstRunForm;
-		hFirstRun = new TFirstRunForm(Application);
-	  }
-	  hFirstRun->Show();
-	}
-	//Normalne uruchomienie
-	else
-	{
-	  if(!hGravatarForm)
-	  {
-		Application->Handle = (HWND)GravatarForm;
-		hGravatarForm = new TGravatarForm(Application);
-	  }
-	  hGravatarForm->StartTimer->Enabled = true;
-	}
-  }
-
-  return 0;
-}
-//---------------------------------------------------------------------------
-
-extern "C" int __declspec(dllexport)__stdcall Settings()
-{
+  TIniFile *Ini = new TIniFile(SettingsFileDir);
+  //Domyslny awatar
+  DefaultAvatar = Ini->ReadInteger("Settings","DefaultAvatar",0);
+  //Sposob pobierania adresu e-mail
+  GetMode = Ini->ReadBool("Settings","GetMode",false);
+  //Ustalony przez usera adres e-mail
+  StaticEmail = Ini->ReadString("Settings","StaticEmail","");
+  //Czestotliwosc sprawdzania aktualizacji
+  int Interval = Ini->ReadInteger("Settings","Interval",0);
+  //Wymuszanie aktualizacji
+  ForceUpdate = Ini->ReadBool("Settings","ForceUpdate",false);
+  //Informacja o pomyslnym zaktualizowaniu awatarow
+  InfoSuccess = Ini->ReadBool("Settings","InfoSuccess",true);
+  //Informacja o bledzie podczas aktualizacji awatarow
+  InfoFail = Ini->ReadBool("Settings","InfoFail",false);
+  //Tryb obslugi kont
+  AccountsMode = Ini->ReadBool("Settings","AccountsMode",false);
+  //Lista obslugiwanych kont
+  Accounts = Ini->ReadString("Settings","Accounts","");;
+  delete Ini;
+  //Przypisanie uchwytu do okna ustawien
   if(!hGravatarForm)
   {
 	Application->Handle = (HWND)GravatarForm;
 	hGravatarForm = new TGravatarForm(Application);
   }
-  hGravatarForm->Show();
+  //Ustawianie czestotliwosci aktualizacji
+  if(!OnLoad) hGravatarForm->Timer->Enabled = false;
+  hGravatarForm->Timer->Interval = 3600000 * Interval;
+  if((!OnLoad)&(Interval)) hGravatarForm->Timer->Enabled = true;
+}
+//---------------------------------------------------------------------------
+
+extern "C" int __declspec(dllexport) __stdcall Load(PPluginLink Link)
+{
+  //Linkowanie wtyczki z komunikatorem
+  PluginLink = *Link;
+  //Pobranie sciezki do pliku ustawien
+  SettingsFileDir = GetPluginUserDir()+"\\\\Gravatar\\\\Settings.ini";
+  //Sciezka folderu prywatnego wtyczek
+  UnicodeString PluginUserDir = GetPluginUserDir();
+  //Wypakiwanie ikonki Gravatar.dll.png
+  //FA5BB69CDDDD3D7350FAA9187E438FA0
+  if(!DirectoryExists(PluginUserDir+"\\\\Shared"))
+   CreateDir(PluginUserDir+"\\\\Shared");
+  if(!FileExists(PluginUserDir+"\\\\Shared\\\\Gravatar.dll.png"))
+   SaveResourceToFile((PluginUserDir+"\\\\Shared\\\\Gravatar.dll.png").t_str(),"PLUGIN_RES");
+  else if(MD5File(PluginUserDir+"\\\\Shared\\\\Gravatar.dll.png")!="FA5BB69CDDDD3D7350FAA9187E438FA0")
+   SaveResourceToFile((PluginUserDir+"\\\\Shared\\\\Gravatar.dll.png").t_str(),"PLUGIN_RES");
+  //Tworzeniu katalogu z ustawieniami wtyczki
+  if(!DirectoryExists(PluginUserDir+"\\\\Gravatar"))
+   CreateDir(PluginUserDir+"\\\\Gravatar");
+  //Wtyczka zostala juz skonfigurowana
+  if(FileExists(SettingsFileDir))
+   //Odczyt ustawien w rdzeniu wtyczki
+   LoadSettings(true);
+  //Hook na zmianê kompozycji
+  PluginLink.HookEvent(AQQ_SYSTEM_THEMECHANGED,OnThemeChanged);
+  //Hook na zaladowanie wszystkich modulow w AQQ
+  PluginLink.HookEvent(AQQ_SYSTEM_MODULESLOADED,OnModulesLoaded);
+  //Jezeli wszystkie moduly w AQQ zostaly juz zaladowany przed wczytaniem wtyczki
+  if(PluginLink.CallService(AQQ_SYSTEM_MODULESLOADED,0,0))
+  {
+	//Jezeli nie skonfigurowano jeszcze wtyczki
+	if(!FileExists(SettingsFileDir))
+	{
+	  //Przypisanie uchwytu do okna pierwszego uruchomienia wtyczki
+	  if(!hFirstRun)
+	  {
+		Application->Handle = (HWND)FirstRunForm;
+		hFirstRun = new TFirstRunForm(Application);
+	  }
+	  //Pokazanie okna pierwszego uruchomienia wtyczki
+	  hFirstRun->Show();
+	}
+	//Wtyczka zostala juz wczesniej skonfigurowana
+	else
+	{
+	  //Przypisanie uchwytu do okna ustawien
+	  if(!hGravatarForm)
+	  {
+		Application->Handle = (HWND)GravatarForm;
+		hGravatarForm = new TGravatarForm(Application);
+	  }
+	  //Wlaczenie timera
+	  hGravatarForm->StartTimer->Enabled = true;
+	}
+  }
 
   return 0;
 }
@@ -681,19 +686,36 @@ extern "C" int __declspec(dllexport) __stdcall Unload()
 {
   //Anty "Abnormal program termination"
   hGravatarForm->IdHTTP->Disconnect();
-  //Wyladowanie hookow
-  PluginLink.UnhookEvent(OnThemeChanged);
+  //Wyladowanie wszystkich hookow
   PluginLink.UnhookEvent(OnModulesLoaded);
+  PluginLink.UnhookEvent(OnThemeChanged);
 
   return 0;
 }
 //---------------------------------------------------------------------------
 
+//Ustawienia wtyczki
+extern "C" int __declspec(dllexport)__stdcall Settings()
+{
+  //Przypisanie uchwytu do okna ustawien
+  if(!hGravatarForm)
+  {
+	Application->Handle = (HWND)GravatarForm;
+	hGravatarForm = new TGravatarForm(Application);
+  }
+  //Pokazanie okna ustawien
+  hGravatarForm->Show();
+
+  return 0;
+}
+//---------------------------------------------------------------------------
+
+//Informacje o wtyczce
 extern "C" __declspec(dllexport) PPluginInfo __stdcall AQQPluginInfo(DWORD AQQVersion)
 {
   PluginInfo.cbSize = sizeof(TPluginInfo);
   PluginInfo.ShortName = (wchar_t*)L"Gravatar";
-  PluginInfo.Version = PLUGIN_MAKE_VERSION(1,1,2,0);
+  PluginInfo.Version = PLUGIN_MAKE_VERSION(1,1,3,0);
   PluginInfo.Description = (wchar_t*)L"Aktualizacja awatarów na podstawie danych w serwisie gravatar.com";
   PluginInfo.Author = (wchar_t*)L"Krzysztof Grochocki (Beherit)";
   PluginInfo.AuthorMail = (wchar_t*)L"kontakt@beherit.pl";

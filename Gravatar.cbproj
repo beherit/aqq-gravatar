@@ -60,15 +60,19 @@
 			<TASM_Debugging>None</TASM_Debugging>
 		</PropertyGroup>
 		<ItemGroup>
-			<CppCompile Include="GravatarFrm.cpp">
-				<Form>GravatarForm</Form>
-				<DependentOn>GravatarFrm.h</DependentOn>
-				<BuildOrder>1</BuildOrder>
-			</CppCompile>
 			<CppCompile Include="FirstRunFrm.cpp">
 				<Form>FirstRunForm</Form>
 				<DependentOn>FirstRunFrm.h</DependentOn>
 				<BuildOrder>3</BuildOrder>
+			</CppCompile>
+			<RcItem Include="Data\Gravatar.dll.png">
+				<ResourceType>RCData</ResourceType>
+				<ResourceId>PLUGIN_RES</ResourceId>
+			</RcItem>
+			<CppCompile Include="GravatarFrm.cpp">
+				<Form>GravatarForm</Form>
+				<DependentOn>GravatarFrm.h</DependentOn>
+				<BuildOrder>1</BuildOrder>
 			</CppCompile>
 			<ResFiles Include="Gravatar.res">
 				<BuildOrder>2</BuildOrder>
@@ -76,8 +80,8 @@
 			<CppCompile Include="Gravatar.cpp">
 				<BuildOrder>0</BuildOrder>
 			</CppCompile>
-			<FormResources Include="GravatarFrm.dfm"/>
 			<FormResources Include="FirstRunFrm.dfm"/>
+			<FormResources Include="GravatarFrm.dfm"/>
 			<BuildConfiguration Include="Base">
 				<Key>Base</Key>
 			</BuildConfiguration>
@@ -101,7 +105,7 @@
 						<VersionInfo Name="AutoIncBuild">False</VersionInfo>
 						<VersionInfo Name="MajorVer">1</VersionInfo>
 						<VersionInfo Name="MinorVer">1</VersionInfo>
-						<VersionInfo Name="Release">2</VersionInfo>
+						<VersionInfo Name="Release">3</VersionInfo>
 						<VersionInfo Name="Build">0</VersionInfo>
 						<VersionInfo Name="Debug">False</VersionInfo>
 						<VersionInfo Name="PreRelease">False</VersionInfo>
@@ -114,7 +118,7 @@
 					<VersionInfoKeys>
 						<VersionInfoKeys Name="CompanyName">Krzysztof Grochocki (Beherit)</VersionInfoKeys>
 						<VersionInfoKeys Name="FileDescription"/>
-						<VersionInfoKeys Name="FileVersion">1.1.2.0</VersionInfoKeys>
+						<VersionInfoKeys Name="FileVersion">1.1.3.0</VersionInfoKeys>
 						<VersionInfoKeys Name="InternalName">Gravatar</VersionInfoKeys>
 						<VersionInfoKeys Name="LegalCopyright">Krzysztof Grochocki (Beherit)</VersionInfoKeys>
 						<VersionInfoKeys Name="LegalTrademarks">Krzysztof Grochocki (Beherit)</VersionInfoKeys>
