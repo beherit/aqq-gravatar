@@ -4,7 +4,7 @@ object FirstRunForm: TFirstRunForm
   BorderIcons = []
   BorderStyle = bsSingle
   Caption = 'Gravatar - pierwsze uruchomienie'
-  ClientHeight = 179
+  ClientHeight = 177
   ClientWidth = 281
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -647,22 +647,23 @@ object FirstRunForm: TFirstRunForm
     000000000000000000000000000000000000000000000000000000000000}
   OldCreateOrder = False
   Position = poScreenCenter
+  OnCreate = FormCreate
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object Bevel: TBevel
+  object Bevel: TsBevel
     Left = 0
-    Top = 141
+    Top = 139
     Width = 281
     Height = 38
     Align = alBottom
-    Shape = bsTopLine
+    Shape = bsSpacer
     ExplicitTop = 173
     ExplicitWidth = 312
   end
-  object SaveButton: TButton
+  object SaveButton: TsButton
     Left = 198
-    Top = 147
+    Top = 146
     Width = 75
     Height = 25
     Caption = 'Zako'#324'cz'
@@ -675,50 +676,51 @@ object FirstRunForm: TFirstRunForm
     TabOrder = 7
     Visible = False
     OnClick = SaveButtonClick
+    SkinData.SkinSection = 'BUTTON'
   end
-  object PrevButton: TButton
+  object PrevButton: TsButton
     Left = 117
-    Top = 147
+    Top = 146
     Width = 75
     Height = 25
-    Caption = 'Wstecz'
-    Enabled = False
+    Action = aPrevButton
     TabOrder = 8
-    OnClick = PrevButtonClick
+    SkinData.SkinSection = 'BUTTON'
   end
-  object NextButton: TButton
+  object NextButton: TsButton
     Left = 198
-    Top = 147
+    Top = 146
     Width = 75
     Height = 25
-    Caption = 'Dalej'
+    Action = aNextButton
     TabOrder = 6
-    OnClick = NextButtonClick
+    SkinData.SkinSection = 'BUTTON'
   end
-  object Panel6: TPanel
+  object Panel6: TsPanel
     Left = 0
     Top = 0
     Width = 281
-    Height = 141
+    Height = 139
     Align = alClient
     ShowCaption = False
     TabOrder = 5
     Visible = False
-    object EndLabel1: TLabel
+    SkinData.SkinSection = 'PANEL'
+    object EndLabel1: TsLabel
       Left = 94
       Top = 8
       Width = 93
       Height = 13
       Caption = 'To ju'#380' wszystko!'
+      ParentFont = False
+      WordWrap = True
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
-      ParentFont = False
-      WordWrap = True
     end
-    object EndLabel2: TLabel
+    object EndLabel2: TsLabel
       Left = 94
       Top = 27
       Width = 177
@@ -820,7 +822,7 @@ object FirstRunForm: TFirstRunForm
         1A8E161C9462A2BC8F9DC4E2EBE2E7ED2BCDC9F98514515D2729FFD9}
       Transparent = True
     end
-    object EndLabel3: TLabel
+    object EndLabel3: TsLabel
       Left = 14
       Top = 94
       Width = 255
@@ -831,15 +833,16 @@ object FirstRunForm: TFirstRunForm
       WordWrap = True
     end
   end
-  object Panel5: TPanel
+  object Panel5: TsPanel
     Left = 0
     Top = 0
     Width = 281
-    Height = 141
+    Height = 139
     Align = alClient
     TabOrder = 4
     Visible = False
-    object AccountsLabel: TLabel
+    SkinData.SkinSection = 'PANEL'
+    object AccountsLabel: TsLabel
       Left = 8
       Top = 8
       Width = 220
@@ -847,48 +850,62 @@ object FirstRunForm: TFirstRunForm
       Caption = 'Wybierz konta, kt'#243're ma obs'#322'ugiwa'#263' wtyczka:'
       WordWrap = True
     end
-    object AccountsMode0RadioButton: TRadioButton
+    object AccountsMode0RadioButton: TsRadioButton
       Left = 16
       Top = 27
-      Width = 251
-      Height = 17
+      Width = 246
+      Height = 20
       Caption = 'Ustawiaj awatar we wszystkich kontach Jabber'
       Checked = True
       TabOrder = 0
       TabStop = True
       OnClick = AccountsMode0RadioButtonClick
+      SkinData.SkinSection = 'RADIOBUTTON'
     end
-    object AccountsMode1RadioButton: TRadioButton
+    object AccountsMode1RadioButton: TsRadioButton
       Left = 16
       Top = 50
-      Width = 239
-      Height = 17
+      Width = 236
+      Height = 20
       Caption = 'Ustawiaj awatar tylko na wybranych kontach'
       TabOrder = 1
       OnClick = AccountsMode1RadioButtonClick
+      SkinData.SkinSection = 'RADIOBUTTON'
     end
-    object AccountsCheckListBox: TCheckListBox
+    object AccountsCheckListBox: TsCheckListBox
       Left = 32
       Top = 73
       Width = 212
       Height = 58
+      BorderStyle = bsSingle
       Enabled = False
       ItemHeight = 13
       ParentShowHint = False
       ShowHint = False
       TabOrder = 2
+      BoundLabel.Indent = 0
+      BoundLabel.Font.Charset = DEFAULT_CHARSET
+      BoundLabel.Font.Color = clWindowText
+      BoundLabel.Font.Height = -11
+      BoundLabel.Font.Name = 'Tahoma'
+      BoundLabel.Font.Style = []
+      BoundLabel.Layout = sclLeft
+      BoundLabel.MaxWidth = 0
+      BoundLabel.UseSkinColor = True
+      SkinData.SkinSection = 'EDIT'
     end
   end
-  object Panel4: TPanel
+  object Panel4: TsPanel
     Left = 0
     Top = 0
     Width = 281
-    Height = 141
+    Height = 139
     Align = alClient
     ShowCaption = False
     TabOrder = 3
     Visible = False
-    object IntervalLabel: TLabel
+    SkinData.SkinSection = 'PANEL'
+    object IntervalLabel: TsLabel
       Left = 8
       Top = 8
       Width = 260
@@ -898,18 +915,29 @@ object FirstRunForm: TFirstRunForm
         ' gravatar.com'
       WordWrap = True
     end
-    object InfoLabel: TLabel
+    object InfoLabel: TsLabel
       Left = 8
       Top = 70
       Width = 174
       Height = 13
       Caption = 'Pokazuj chmurk'#281' informacyjn'#261', gdy:'
     end
-    object IntervalComboBox: TComboBox
+    object IntervalComboBox: TsComboBox
       Left = 16
       Top = 40
       Width = 145
       Height = 21
+      Alignment = taLeftJustify
+      BoundLabel.Indent = 0
+      BoundLabel.Font.Charset = DEFAULT_CHARSET
+      BoundLabel.Font.Color = clWindowText
+      BoundLabel.Font.Height = -11
+      BoundLabel.Font.Name = 'Tahoma'
+      BoundLabel.Font.Style = []
+      BoundLabel.Layout = sclLeft
+      BoundLabel.MaxWidth = 0
+      BoundLabel.UseSkinColor = True
+      SkinData.SkinSection = 'COMBOBOX'
       Style = csDropDownList
       ItemIndex = 0
       TabOrder = 0
@@ -921,64 +949,71 @@ object FirstRunForm: TFirstRunForm
         'Co trzy godziny'
         'Co cztery godziny')
     end
-    object InfoSuccessCheckBox: TCheckBox
+    object InfoSuccessCheckBox: TsCheckBox
       Left = 16
       Top = 89
-      Width = 184
-      Height = 17
+      Width = 180
+      Height = 20
       Caption = 'Pomy'#347'lnie zaktualizowano awatar'
       Checked = True
       State = cbChecked
       TabOrder = 1
+      SkinData.SkinSection = 'CHECKBOX'
+      ImgChecked = 0
+      ImgUnchecked = 0
       WordWrap = True
     end
-    object InfoFailCheckBox: TCheckBox
+    object InfoFailCheckBox: TsCheckBox
       Left = 16
       Top = 109
-      Width = 184
-      Height = 17
+      Width = 183
+      Height = 20
       Caption = 'Wyst'#261'pi'#322' b'#322#261'd podczas aktualizacji'
       TabOrder = 2
+      SkinData.SkinSection = 'CHECKBOX'
+      ImgChecked = 0
+      ImgUnchecked = 0
       WordWrap = True
     end
   end
-  object Panel3: TPanel
+  object Panel3: TsPanel
     Left = 0
     Top = 0
     Width = 281
-    Height = 141
+    Height = 139
     Align = alClient
     ShowCaption = False
     TabOrder = 2
     Visible = False
-    object DefaultAvatarBevel3: TBevel
+    SkinData.SkinSection = 'PANEL'
+    object DefaultAvatarBevel3: TsBevel
       Left = 222
       Top = 86
       Width = 34
       Height = 34
       Visible = False
     end
-    object DefaultAvatarBevel2: TBevel
+    object DefaultAvatarBevel2: TsBevel
       Left = 184
       Top = 86
       Width = 34
       Height = 34
       Visible = False
     end
-    object DefaultAvatarBevel1: TBevel
+    object DefaultAvatarBevel1: TsBevel
       Left = 222
       Top = 48
       Width = 34
       Height = 34
       Visible = False
     end
-    object DefaultAvatarBevel0: TBevel
+    object DefaultAvatarBevel0: TsBevel
       Left = 184
       Top = 48
       Width = 34
       Height = 34
     end
-    object DefaultAvatarLabel: TLabel
+    object DefaultAvatarLabel: TsLabel
       Left = 8
       Top = 8
       Width = 242
@@ -994,7 +1029,6 @@ object FirstRunForm: TFirstRunForm
       Width = 32
       Height = 32
       Cursor = crHandPoint
-      AutoSize = True
       Picture.Data = {
         0A544A504547496D616765EA040000FFD8FFE000104A46494600010100000100
         010000FFFE003B43524541544F523A2067642D6A7065672076312E3020287573
@@ -1045,7 +1079,6 @@ object FirstRunForm: TFirstRunForm
       Width = 32
       Height = 32
       Cursor = crHandPoint
-      AutoSize = True
       Picture.Data = {
         0954506E67496D61676589504E470D0A1A0A0000000D49484452000000200000
         00200806000000737A7AF4000003C24944415478DAAD575D485441149EAB6451
@@ -1089,7 +1122,6 @@ object FirstRunForm: TFirstRunForm
       Width = 32
       Height = 32
       Cursor = crHandPoint
-      AutoSize = True
       Picture.Data = {
         0954506E67496D61676589504E470D0A1A0A0000000D49484452000000200000
         00200802000000FC18EDA3000004E64944415478DADD967F4C5B5514C7EFED2B
@@ -1142,7 +1174,6 @@ object FirstRunForm: TFirstRunForm
       Width = 32
       Height = 32
       Cursor = crHandPoint
-      AutoSize = True
       Picture.Data = {
         0954506E67496D61676589504E470D0A1A0A0000000D49484452000000200000
         00200802000000FC18EDA30000042E4944415478DA63FCF1F31F035EF0E9D3A7
@@ -1183,55 +1214,60 @@ object FirstRunForm: TFirstRunForm
       Transparent = True
       OnClick = DefaultAvatarImage3Click
     end
-    object DefaultAvatarRadioButton0: TRadioButton
+    object DefaultAvatarRadioButton0: TsRadioButton
       Left = 21
       Top = 40
-      Width = 145
-      Height = 17
+      Width = 95
+      Height = 20
       Caption = 'Logo Gravatara'
       Checked = True
       TabOrder = 0
       TabStop = True
-      OnClick = DefaultAvatarRadioButton0Click
+      OnClick = aDefaultAvatar0Execute
+      SkinData.SkinSection = 'RADIOBUTTON'
     end
-    object DefaultAvatarRadioButton1: TRadioButton
+    object DefaultAvatarRadioButton1: TsRadioButton
       Left = 21
       Top = 63
-      Width = 145
-      Height = 17
+      Width = 136
+      Height = 20
       Caption = 'Identicon (generowany)'
       TabOrder = 1
-      OnClick = DefaultAvatarRadioButton1Click
+      OnClick = aDefaultAvatar1Execute
+      SkinData.SkinSection = 'RADIOBUTTON'
     end
-    object DefaultAvatarRadioButton2: TRadioButton
+    object DefaultAvatarRadioButton2: TsRadioButton
       Left = 21
       Top = 86
-      Width = 145
-      Height = 17
+      Width = 133
+      Height = 20
       Caption = 'Wavatar (generowany)'
       TabOrder = 2
-      OnClick = DefaultAvatarRadioButton2Click
+      OnClick = aDefaultAvatar2Execute
+      SkinData.SkinSection = 'RADIOBUTTON'
     end
-    object DefaultAvatarRadioButton3: TRadioButton
+    object DefaultAvatarRadioButton3: TsRadioButton
       Left = 21
       Top = 109
-      Width = 145
-      Height = 17
+      Width = 141
+      Height = 20
       Caption = 'MonsterID (generowany)'
       TabOrder = 3
-      OnClick = DefaultAvatarRadioButton3Click
+      OnClick = aDefaultAvatar3Execute
+      SkinData.SkinSection = 'RADIOBUTTON'
     end
   end
-  object Panel2: TPanel
+  object Panel2: TsPanel
     Left = 0
     Top = 0
     Width = 281
-    Height = 141
+    Height = 139
     Align = alClient
     ShowCaption = False
     TabOrder = 1
     Visible = False
-    object GetModeLabel: TLabel
+    SkinData.SkinSection = 'PANEL'
+    object GetModeLabel: TsLabel
       Left = 8
       Top = 8
       Width = 259
@@ -1241,29 +1277,29 @@ object FirstRunForm: TFirstRunForm
         ' jest przypisany awatar.'
       WordWrap = True
     end
-    object GetMode0RadioButton: TRadioButton
+    object GetMode0RadioButton: TsRadioButton
       Left = 16
       Top = 40
-      Width = 258
-      Height = 17
+      Width = 256
+      Height = 20
       Caption = 'Adres e-mail pobierany z wizyt'#243'wki danego konta'
       Checked = True
       TabOrder = 0
       TabStop = True
-      WordWrap = True
       OnClick = GetMode0RadioButtonClick
+      SkinData.SkinSection = 'RADIOBUTTON'
     end
-    object GetMode1RadioButton: TRadioButton
+    object GetMode1RadioButton: TsRadioButton
       Left = 16
       Top = 63
-      Width = 217
-      Height = 18
+      Width = 218
+      Height = 20
       Caption = 'Ustalony adres e-mail dla wszystkich kont'
       TabOrder = 1
-      WordWrap = True
       OnClick = GetMode1RadioButtonClick
+      SkinData.SkinSection = 'RADIOBUTTON'
     end
-    object EmailEdit: TEdit
+    object EmailEdit: TsEdit
       Left = 32
       Top = 87
       Width = 185
@@ -1272,30 +1308,41 @@ object FirstRunForm: TFirstRunForm
       TabOrder = 2
       Text = 'Wpisz tutaj adres e-mail'
       TextHint = 'Wpisz tutaj adres e-mail'
+      SkinData.SkinSection = 'EDIT'
+      BoundLabel.Indent = 0
+      BoundLabel.Font.Charset = DEFAULT_CHARSET
+      BoundLabel.Font.Color = clWindowText
+      BoundLabel.Font.Height = -11
+      BoundLabel.Font.Name = 'Tahoma'
+      BoundLabel.Font.Style = []
+      BoundLabel.Layout = sclLeft
+      BoundLabel.MaxWidth = 0
+      BoundLabel.UseSkinColor = True
     end
   end
-  object Panel1: TPanel
+  object Panel1: TsPanel
     Left = 0
     Top = 0
     Width = 281
-    Height = 141
+    Height = 139
     Align = alClient
     ShowCaption = False
     TabOrder = 0
-    object WelcomeLabel1: TLabel
+    SkinData.SkinSection = 'PANEL'
+    object WelcomeLabel1: TsLabel
       Left = 94
       Top = 8
       Width = 180
       Height = 26
       Alignment = taCenter
       Caption = 'Witaj w kreatorze pierwszego uruchomienia wtyczki Gravatar!'
+      ParentFont = False
+      WordWrap = True
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
       Font.Name = 'Tahoma'
       Font.Style = [fsBold]
-      ParentFont = False
-      WordWrap = True
     end
     object GravatarImage: TImage
       Left = 8
@@ -1389,7 +1436,7 @@ object FirstRunForm: TFirstRunForm
         1A8E161C9462A2BC8F9DC4E2EBE2E7ED2BCDC9F98514515D2729FFD9}
       Transparent = True
     end
-    object WelcomeLabel2: TLabel
+    object WelcomeLabel2: TsLabel
       Left = 94
       Top = 36
       Width = 180
@@ -1403,7 +1450,7 @@ object FirstRunForm: TFirstRunForm
       ParentBiDiMode = False
       WordWrap = True
     end
-    object WelcomeLabel3: TLabel
+    object WelcomeLabel3: TsLabel
       Left = 8
       Top = 94
       Width = 256
@@ -1414,11 +1461,85 @@ object FirstRunForm: TFirstRunForm
       WordWrap = True
     end
   end
-  object ActionList1: TActionList
+  object ActionList: TActionList
     Top = 144
     object aSaveSettings: TAction
       Caption = 'aSaveSettings'
       OnExecute = aSaveSettingsExecute
     end
+    object aNextButton: TAction
+      Caption = 'Dalej'
+      ShortCut = 39
+      OnExecute = aNextButtonExecute
+    end
+    object aPrevButton: TAction
+      Caption = 'Wstecz'
+      Enabled = False
+      ShortCut = 37
+      OnExecute = aPrevButtonExecute
+    end
+    object aDefaultAvatar0: TAction
+      Caption = 'aDefaultAvatar0'
+      OnExecute = aDefaultAvatar0Execute
+    end
+    object aDefaultAvatar1: TAction
+      Caption = 'aDefaultAvatar1'
+      OnExecute = aDefaultAvatar1Execute
+    end
+    object aDefaultAvatar2: TAction
+      Caption = 'aDefaultAvatar2'
+      OnExecute = aDefaultAvatar2Execute
+    end
+    object aDefaultAvatar3: TAction
+      Caption = 'aDefaultAvatar3'
+      OnExecute = aDefaultAvatar3Execute
+    end
+  end
+  object sSkinManager: TsSkinManager
+    ExtendedBorders = True
+    IsDefault = False
+    Active = False
+    InternalSkins = <>
+    MenuSupport.IcoLineSkin = 'ICOLINE'
+    MenuSupport.ExtraLineFont.Charset = DEFAULT_CHARSET
+    MenuSupport.ExtraLineFont.Color = clWindowText
+    MenuSupport.ExtraLineFont.Height = -11
+    MenuSupport.ExtraLineFont.Name = 'Tahoma'
+    MenuSupport.ExtraLineFont.Style = []
+    SkinDirectory = 'c:\Skins'
+    SkinInfo = 'N/A'
+    ThirdParty.ThirdEdits = ' '
+    ThirdParty.ThirdButtons = 'TsButton'
+    ThirdParty.ThirdBitBtns = ' '
+    ThirdParty.ThirdCheckBoxes = ' '
+    ThirdParty.ThirdGroupBoxes = ' '
+    ThirdParty.ThirdListViews = ' '
+    ThirdParty.ThirdPanels = ' '
+    ThirdParty.ThirdGrids = ' '
+    ThirdParty.ThirdTreeViews = ' '
+    ThirdParty.ThirdComboBoxes = ' '
+    ThirdParty.ThirdWWEdits = ' '
+    ThirdParty.ThirdVirtualTrees = ' '
+    ThirdParty.ThirdGridEh = ' '
+    ThirdParty.ThirdPageControl = ' '
+    ThirdParty.ThirdTabControl = ' '
+    ThirdParty.ThirdToolBar = ' '
+    ThirdParty.ThirdStatusBar = ' '
+    ThirdParty.ThirdSpeedButton = ' '
+    ThirdParty.ThirdScrollControl = ' '
+    ThirdParty.ThirdUpDown = ' '
+    Left = 64
+    Top = 144
+  end
+  object sSkinProvider: TsSkinProvider
+    AddedTitle.Font.Charset = DEFAULT_CHARSET
+    AddedTitle.Font.Color = clNone
+    AddedTitle.Font.Height = -11
+    AddedTitle.Font.Name = 'Tahoma'
+    AddedTitle.Font.Style = []
+    SkinData.SkinSection = 'FORM'
+    TitleButtons = <>
+    Left = 32
+    Top = 144
   end
 end

@@ -647,10 +647,11 @@ object GravatarForm: TGravatarForm
     000000000000000000000000000000000000000000000000000000000000}
   OldCreateOrder = False
   Position = poScreenCenter
+  OnCreate = FormCreate
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object Bevel: TBevel
+  object Bevel: TsBevel
     Left = 0
     Top = 182
     Width = 312
@@ -661,40 +662,53 @@ object GravatarForm: TGravatarForm
     ExplicitTop = 236
     ExplicitWidth = 327
   end
-  object PageControl: TPageControl
-    Left = 8
-    Top = 8
-    Width = 297
-    Height = 169
+  object PageControl: TsPageControl
+    AlignWithMargins = True
+    Left = 6
+    Top = 6
+    Width = 300
+    Height = 170
+    Margins.Left = 6
+    Margins.Top = 6
+    Margins.Right = 6
+    Margins.Bottom = 6
     ActivePage = DefaultAvatarTabSheet
+    Align = alClient
     TabOrder = 0
-    object DefaultAvatarTabSheet: TTabSheet
+    SkinData.SkinSection = 'PAGECONTROL'
+    object DefaultAvatarTabSheet: TsTabSheet
       Caption = 'Domy'#347'lny awatar'
-      object DefaultAvatarBevel0: TBevel
-        Left = 184
-        Top = 50
-        Width = 34
-        Height = 34
+      SkinData.CustomColor = False
+      SkinData.CustomFont = False
+      object DefaultAvatarBevel0: TsBevel
+        Left = 183
+        Top = 49
+        Width = 36
+        Height = 36
+        Shape = bsFrame
       end
-      object DefaultAvatarBevel1: TBevel
-        Left = 222
-        Top = 50
-        Width = 34
-        Height = 34
+      object DefaultAvatarBevel1: TsBevel
+        Left = 221
+        Top = 49
+        Width = 36
+        Height = 36
+        Shape = bsFrame
         Visible = False
       end
-      object DefaultAvatarBevel2: TBevel
-        Left = 184
+      object DefaultAvatarBevel2: TsBevel
+        Left = 183
         Top = 87
-        Width = 34
-        Height = 34
+        Width = 36
+        Height = 36
+        Shape = bsFrame
         Visible = False
       end
-      object DefaultAvatarBevel3: TBevel
-        Left = 222
-        Top = 88
-        Width = 34
-        Height = 34
+      object DefaultAvatarBevel3: TsBevel
+        Left = 221
+        Top = 87
+        Width = 36
+        Height = 36
+        Shape = bsFrame
         Visible = False
       end
       object DefaultAvatarImage0: TImage
@@ -794,7 +808,7 @@ object GravatarForm: TGravatarForm
       end
       object DefaultAvatarImage2: TImage
         Left = 185
-        Top = 88
+        Top = 89
         Width = 32
         Height = 32
         Cursor = crHandPoint
@@ -892,7 +906,7 @@ object GravatarForm: TGravatarForm
         Transparent = True
         OnClick = DefaultAvatarImage3Click
       end
-      object DefaultAvatarLabel: TLabel
+      object DefaultAvatarLabel: TsLabel
         Left = 6
         Top = 6
         Width = 227
@@ -902,49 +916,55 @@ object GravatarForm: TGravatarForm
           'o awatara:'
         WordWrap = True
       end
-      object DefaultAvatarRadioButton0: TRadioButton
+      object DefaultAvatarRadioButton0: TsRadioButton
         Left = 21
         Top = 42
-        Width = 145
-        Height = 17
+        Width = 95
+        Height = 20
         Caption = 'Logo Gravatara'
         Checked = True
         TabOrder = 0
         TabStop = True
-        OnClick = DefaultAvatarRadioButton0Click
+        OnClick = aDefaultAvatar0Execute
+        SkinData.SkinSection = 'RADIOBUTTON'
       end
-      object DefaultAvatarRadioButton1: TRadioButton
+      object DefaultAvatarRadioButton1: TsRadioButton
         Left = 21
         Top = 65
-        Width = 145
-        Height = 17
+        Width = 136
+        Height = 20
         Caption = 'Identicon (generowany)'
         TabOrder = 1
-        OnClick = DefaultAvatarRadioButton1Click
+        OnClick = aDefaultAvatar1Execute
+        SkinData.SkinSection = 'RADIOBUTTON'
       end
-      object DefaultAvatarRadioButton2: TRadioButton
+      object DefaultAvatarRadioButton2: TsRadioButton
         Left = 21
         Top = 88
-        Width = 145
-        Height = 17
+        Width = 133
+        Height = 20
         Caption = 'Wavatar (generowany)'
         TabOrder = 2
-        OnClick = DefaultAvatarRadioButton2Click
+        OnClick = aDefaultAvatar2Execute
+        SkinData.SkinSection = 'RADIOBUTTON'
       end
-      object DefaultAvatarRadioButton3: TRadioButton
+      object DefaultAvatarRadioButton3: TsRadioButton
         Left = 21
         Top = 111
-        Width = 145
-        Height = 17
+        Width = 141
+        Height = 20
         Caption = 'MonsterID (generowany)'
         TabOrder = 3
-        OnClick = DefaultAvatarRadioButton3Click
+        OnClick = aDefaultAvatar3Execute
+        SkinData.SkinSection = 'RADIOBUTTON'
       end
     end
-    object TabSheet1: TTabSheet
+    object EmailTabSheet: TsTabSheet
       Caption = 'Adres e-mail'
       ImageIndex = 1
-      object GetModeLabel: TLabel
+      SkinData.CustomColor = False
+      SkinData.CustomFont = False
+      object GetModeLabel: TsLabel
         Left = 6
         Top = 6
         Width = 273
@@ -954,7 +974,7 @@ object GravatarForm: TGravatarForm
           'zypisany awatar:'
         WordWrap = True
       end
-      object EmailEdit: TEdit
+      object EmailEdit: TsEdit
         Left = 30
         Top = 85
         Width = 185
@@ -963,41 +983,54 @@ object GravatarForm: TGravatarForm
         TabOrder = 2
         Text = 'Wpisz tutaj adres e-mail'
         TextHint = 'Wpisz tutaj adres e-mail'
+        OnChange = aAllowApplyExecute
+        SkinData.SkinSection = 'EDIT'
+        BoundLabel.Indent = 0
+        BoundLabel.Font.Charset = DEFAULT_CHARSET
+        BoundLabel.Font.Color = clWindowText
+        BoundLabel.Font.Height = -11
+        BoundLabel.Font.Name = 'Tahoma'
+        BoundLabel.Font.Style = []
+        BoundLabel.Layout = sclLeft
+        BoundLabel.MaxWidth = 0
+        BoundLabel.UseSkinColor = True
       end
-      object GetMode0RadioButton: TRadioButton
+      object GetMode0RadioButton: TsRadioButton
         Left = 14
         Top = 38
-        Width = 258
-        Height = 17
+        Width = 256
+        Height = 20
         Caption = 'Adres e-mail pobierany z wizyt'#243'wki danego konta'
         Checked = True
         TabOrder = 0
         TabStop = True
-        WordWrap = True
         OnClick = GetMode0RadioButtonClick
+        SkinData.SkinSection = 'RADIOBUTTON'
       end
-      object GetMode1RadioButton: TRadioButton
+      object GetMode1RadioButton: TsRadioButton
         Left = 14
         Top = 61
-        Width = 217
-        Height = 18
+        Width = 218
+        Height = 20
         Caption = 'Ustalony adres e-mail dla wszystkich kont'
         TabOrder = 1
-        WordWrap = True
         OnClick = GetMode1RadioButtonClick
+        SkinData.SkinSection = 'RADIOBUTTON'
       end
     end
-    object TabSheet2: TTabSheet
+    object UpdateTabSheet: TsTabSheet
       Caption = 'Aktualizacje'
       ImageIndex = 2
-      object InfoLabel: TLabel
+      SkinData.CustomColor = False
+      SkinData.CustomFont = False
+      object InfoLabel: TsLabel
         Left = 6
         Top = 70
         Width = 174
         Height = 13
         Caption = 'Pokazuj chmurk'#281' informacyjn'#261', gdy:'
       end
-      object IntervalLabel: TLabel
+      object IntervalLabel: TsLabel
         Left = 6
         Top = 6
         Width = 230
@@ -1005,42 +1038,62 @@ object GravatarForm: TGravatarForm
         Caption = 'Cz'#281'stotliwo'#347#263' sprawdzania aktualizacji awatara:'
         WordWrap = True
       end
-      object LineBevel: TBevel
+      object LineBevel: TsBevel
         Left = 9
         Top = 58
         Width = 270
         Height = 4
         Shape = bsTopLine
       end
-      object InfoFailCheckBox: TCheckBox
+      object InfoFailCheckBox: TsCheckBox
         Left = 16
         Top = 112
-        Width = 184
-        Height = 17
+        Width = 183
+        Height = 20
         Caption = 'Wyst'#261'pi'#322' b'#322#261'd podczas aktualizacji'
         TabOrder = 2
+        OnClick = aAllowApplyExecute
+        SkinData.SkinSection = 'CHECKBOX'
+        ImgChecked = 0
+        ImgUnchecked = 0
         WordWrap = True
       end
-      object InfoSuccessCheckBox: TCheckBox
+      object InfoSuccessCheckBox: TsCheckBox
         Left = 16
         Top = 89
-        Width = 184
-        Height = 17
+        Width = 180
+        Height = 20
         Caption = 'Pomy'#347'lnie zaktualizowano awatar'
         Checked = True
         State = cbChecked
         TabOrder = 1
+        OnClick = aAllowApplyExecute
+        SkinData.SkinSection = 'CHECKBOX'
+        ImgChecked = 0
+        ImgUnchecked = 0
         WordWrap = True
       end
-      object IntervalComboBox: TComboBox
+      object IntervalComboBox: TsComboBox
         Left = 14
         Top = 25
         Width = 145
         Height = 21
+        Alignment = taLeftJustify
+        BoundLabel.Indent = 0
+        BoundLabel.Font.Charset = DEFAULT_CHARSET
+        BoundLabel.Font.Color = clWindowText
+        BoundLabel.Font.Height = -11
+        BoundLabel.Font.Name = 'Tahoma'
+        BoundLabel.Font.Style = []
+        BoundLabel.Layout = sclLeft
+        BoundLabel.MaxWidth = 0
+        BoundLabel.UseSkinColor = True
+        SkinData.SkinSection = 'COMBOBOX'
         Style = csDropDownList
         ItemIndex = 0
         TabOrder = 0
         Text = 'Przy w'#322#261'czeniu AQQ'
+        OnChange = aAllowApplyExecute
         Items.Strings = (
           'Przy w'#322#261'czeniu AQQ'
           'Co godzin'#281
@@ -1049,10 +1102,12 @@ object GravatarForm: TGravatarForm
           'Co cztery godziny')
       end
     end
-    object TabSheet3: TTabSheet
+    object AccountsTabSheet: TsTabSheet
       Caption = 'Konta'
       ImageIndex = 3
-      object AccountsLabel: TLabel
+      SkinData.CustomColor = False
+      SkinData.CustomFont = False
+      object AccountsLabel: TsLabel
         Left = 6
         Top = 6
         Width = 152
@@ -1060,93 +1115,202 @@ object GravatarForm: TGravatarForm
         Caption = 'Konta kt'#243're obs'#322'uguje wtyczka:'
         WordWrap = True
       end
-      object AccountsCheckListBox: TCheckListBox
+      object AccountsCheckListBox: TsCheckListBox
         Left = 30
         Top = 71
         Width = 212
         Height = 60
+        BorderStyle = bsSingle
         Enabled = False
         ItemHeight = 13
         ParentShowHint = False
         ShowHint = False
         TabOrder = 2
+        BoundLabel.Indent = 0
+        BoundLabel.Font.Charset = DEFAULT_CHARSET
+        BoundLabel.Font.Color = clWindowText
+        BoundLabel.Font.Height = -11
+        BoundLabel.Font.Name = 'Tahoma'
+        BoundLabel.Font.Style = []
+        BoundLabel.Layout = sclLeft
+        BoundLabel.MaxWidth = 0
+        BoundLabel.UseSkinColor = True
+        SkinData.SkinSection = 'EDIT'
+        OnClickCheck = aAllowApplyExecute
       end
-      object AccountsMode0RadioButton: TRadioButton
+      object AccountsMode0RadioButton: TsRadioButton
         Left = 14
         Top = 25
-        Width = 251
-        Height = 17
+        Width = 246
+        Height = 20
         Caption = 'Ustawiaj awatar we wszystkich kontach Jabber'
         Checked = True
         TabOrder = 0
         TabStop = True
         OnClick = AccountsMode0RadioButtonClick
+        SkinData.SkinSection = 'RADIOBUTTON'
       end
-      object AccountsMode1RadioButton: TRadioButton
+      object AccountsMode1RadioButton: TsRadioButton
         Left = 14
         Top = 48
-        Width = 239
-        Height = 17
+        Width = 240
+        Height = 20
         Caption = 'Ustawiaj awatar tylko na wybranych kontach:'
         TabOrder = 1
         OnClick = AccountsMode1RadioButtonClick
+        SkinData.SkinSection = 'RADIOBUTTON'
       end
     end
   end
-  object SaveButton: TButton
+  object SaveButton: TsButton
     Left = 229
     Top = 189
     Width = 75
     Height = 25
-    Caption = 'Zapisz'
+    Caption = 'Zastosuj'
+    Enabled = False
     TabOrder = 1
     OnClick = SaveButtonClick
+    SkinData.SkinSection = 'BUTTON'
+  end
+  object CancelButton: TsButton
+    Left = 148
+    Top = 189
+    Width = 75
+    Height = 25
+    Caption = 'Anuluj'
+    TabOrder = 2
+    OnClick = aExitExecute
+    SkinData.SkinSection = 'BUTTON'
+  end
+  object OKButton: TsButton
+    Left = 67
+    Top = 189
+    Width = 75
+    Height = 25
+    Caption = 'OK'
+    TabOrder = 3
+    OnClick = OKButtonClick
+    SkinData.SkinSection = 'BUTTON'
   end
   object IdHTTP: TIdHTTP
     AllowCookies = False
+    HandleRedirects = True
     ProxyParams.BasicAuthentication = False
     ProxyParams.ProxyPort = 0
     Request.ContentLength = -1
-    Request.Accept = 'text/html, */*'
+    Request.Pragma = 'no-cache'
+    Request.Accept = '*/*'
     Request.BasicAuthentication = False
-    Request.UserAgent = 'Mozilla/3.0 (compatible; Indy Library)'
+    Request.UserAgent = 'AQQ IM Plugin: Gravatar (+http://beherit.pl)'
     HTTPOptions = [hoForceEncodeParams]
-    Left = 8
     Top = 184
   end
   object ActionList1: TActionList
-    Left = 40
+    Left = 32
     Top = 184
     object aExit: TAction
       Caption = 'aExit'
       ShortCut = 27
       OnExecute = aExitExecute
     end
-    object aReadSettings: TAction
-      Caption = 'aReadSettings'
-      OnExecute = aReadSettingsExecute
+    object aLoadSettings: TAction
+      Caption = 'aLoadSettings'
+      OnExecute = aLoadSettingsExecute
     end
     object aSaveSettings: TAction
       Caption = 'aSaveSettings'
       OnExecute = aSaveSettingsExecute
     end
-    object aClearAvatars: TAction
-      Caption = 'aClearAvatars'
-      OnExecute = aClearAvatarsExecute
+    object aAllowApply: TAction
+      Caption = 'aAllowApply'
+      OnExecute = aAllowApplyExecute
+    end
+    object aPageControlSheetChange: TAction
+      Caption = 'aPageControlSheetChange'
+      ShortCut = 16393
+      OnExecute = aPageControlSheetChangeExecute
+    end
+    object aDefaultAvatar0: TAction
+      Caption = 'aDefaultAvatar0'
+      OnExecute = aDefaultAvatar0Execute
+    end
+    object aDefaultAvatar1: TAction
+      Caption = 'aDefaultAvatar1'
+      OnExecute = aDefaultAvatar1Execute
+    end
+    object aDefaultAvatar2: TAction
+      Caption = 'aDefaultAvatar2'
+      OnExecute = aDefaultAvatar2Execute
+    end
+    object aDefaultAvatar3: TAction
+      Caption = 'aDefaultAvatar3'
+      OnExecute = aDefaultAvatar3Execute
     end
   end
   object Timer: TTimer
     Enabled = False
     Interval = 3600000
     OnTimer = TimerTimer
-    Left = 72
+    Left = 64
     Top = 184
   end
   object StartTimer: TTimer
     Enabled = False
-    Interval = 180000
+    Interval = 30000
     OnTimer = StartTimerTimer
-    Left = 104
+    Left = 96
     Top = 184
+  end
+  object sSkinManager: TsSkinManager
+    ExtendedBorders = True
+    Active = False
+    InternalSkins = <>
+    MenuSupport.IcoLineSkin = 'ICOLINE'
+    MenuSupport.ExtraLineFont.Charset = DEFAULT_CHARSET
+    MenuSupport.ExtraLineFont.Color = clWindowText
+    MenuSupport.ExtraLineFont.Height = -11
+    MenuSupport.ExtraLineFont.Name = 'Tahoma'
+    MenuSupport.ExtraLineFont.Style = []
+    SkinDirectory = 'c:\Skins'
+    SkinInfo = 'N/A'
+    ThirdParty.ThirdEdits = ' '
+    ThirdParty.ThirdButtons = 'TsButton'
+    ThirdParty.ThirdBitBtns = ' '
+    ThirdParty.ThirdCheckBoxes = ' '
+    ThirdParty.ThirdGroupBoxes = ' '
+    ThirdParty.ThirdListViews = ' '
+    ThirdParty.ThirdPanels = ' '
+    ThirdParty.ThirdGrids = ' '
+    ThirdParty.ThirdTreeViews = ' '
+    ThirdParty.ThirdComboBoxes = ' '
+    ThirdParty.ThirdWWEdits = ' '
+    ThirdParty.ThirdVirtualTrees = ' '
+    ThirdParty.ThirdGridEh = ' '
+    ThirdParty.ThirdPageControl = ' '
+    ThirdParty.ThirdTabControl = ' '
+    ThirdParty.ThirdToolBar = ' '
+    ThirdParty.ThirdStatusBar = ' '
+    ThirdParty.ThirdSpeedButton = ' '
+    ThirdParty.ThirdScrollControl = ' '
+    ThirdParty.ThirdUpDown = ' '
+    Left = 248
+    Top = 184
+  end
+  object sSkinProvider: TsSkinProvider
+    AddedTitle.Font.Charset = DEFAULT_CHARSET
+    AddedTitle.Font.Color = clNone
+    AddedTitle.Font.Height = -11
+    AddedTitle.Font.Name = 'Tahoma'
+    AddedTitle.Font.Style = []
+    SkinData.SkinSection = 'FORM'
+    TitleButtons = <>
+    Left = 280
+    Top = 184
+  end
+  object IdAntiFreeze: TIdAntiFreeze
+    Active = False
+    OnlyWhenIdle = False
+    Top = 152
   end
 end

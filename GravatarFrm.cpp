@@ -12,16 +12,37 @@
 #pragma link "IdTCPClient"
 #pragma link "IdTCPConnection"
 #pragma link "LMDPNGImage"
+#pragma link "sSkinManager"
+#pragma link "sSkinProvider"
+#pragma link "sBevel"
+#pragma link "sButton"
+#pragma link "sCheckBox"
+#pragma link "sCheckListBox"
+#pragma link "sComboBox"
+#pragma link "sEdit"
+#pragma link "sLabel"
+#pragma link "sListBox"
+#pragma link "sPageControl"
+#pragma link "sRadioButton"
+#pragma link "IdThreadComponent"
+#pragma link "IdCoder"
+#pragma link "IdCoder3to4"
+#pragma link "IdCoderMIME"
+#pragma link "IdAntiFreeze"
+#pragma link "IdAntiFreezeBase"
 #pragma resource "*.dfm"
 TGravatarForm *GravatarForm;
 //---------------------------------------------------------------------------
+__declspec(dllimport)UnicodeString GetThemeSkinDir();
+__declspec(dllimport)bool ChkSkinEnabled();
+__declspec(dllimport)bool ChkNativeEnabled();
 __declspec(dllimport)UnicodeString GetPluginUserDir();
 __declspec(dllimport)UnicodeString GetPluginUserDirW();
 __declspec(dllimport)void RefreshSettings();
 __declspec(dllimport)void RefreshAvatars();
-__declspec(dllimport)void GetAccountList();
+__declspec(dllimport)void GetAccountList(bool FirstRun);
 //---------------------------------------------------------------------------
-UnicodeString eDir;
+bool SettingsChanged = false;
 //---------------------------------------------------------------------------
 __fastcall TGravatarForm::TGravatarForm(TComponent* Owner)
 	: TForm(Owner)
@@ -29,13 +50,93 @@ __fastcall TGravatarForm::TGravatarForm(TComponent* Owner)
 }
 //---------------------------------------------------------------------------
 
+void __fastcall TGravatarForm::FormShow(TObject *Sender)
+{
+  //AplhaSkins
+  if(!ChkSkinEnabled())
+  {
+	UnicodeString ThemeSkinDir = GetThemeSkinDir();
+	if((FileExists(ThemeSkinDir + "\\\\Skin.asz"))&&(!ChkNativeEnabled()))
+	{
+	  ThemeSkinDir = StringReplace(ThemeSkinDir, "\\\\", "\\", TReplaceFlags() << rfReplaceAll);
+	  sSkinManager->SkinDirectory = ThemeSkinDir;
+	  sSkinManager->SkinName = "Skin.asz";
+	  sSkinProvider->DrawNonClientArea = false;
+	  sSkinManager->Active = true;
+	}
+	else
+	 sSkinManager->Active = false;
+  }
+  //Odczyt ustawien
+  aLoadSettings->Execute();
+  //Wylaczenie buttona
+  SaveButton->Enabled = false;
+  //Ustawienie aktywnej karty
+  PageControl->ActivePageIndex = 0;
+  //Zmienna sprawdzania dokonania zmian
+  SettingsChanged = false;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TGravatarForm::FormCreate(TObject *Sender)
+{
+  //AlphaSkins
+  if(ChkSkinEnabled())
+  {
+	UnicodeString ThemeSkinDir = GetThemeSkinDir();
+	if((FileExists(ThemeSkinDir + "\\\\Skin.asz"))&&(!ChkNativeEnabled()))
+	{
+	  ThemeSkinDir = StringReplace(ThemeSkinDir, "\\\\", "\\", TReplaceFlags() << rfReplaceAll);
+	  sSkinManager->SkinDirectory = ThemeSkinDir;
+	  sSkinManager->SkinName = "Skin.asz";
+	  sSkinProvider->DrawNonClientArea = true;
+	  sSkinManager->Active = true;
+	}
+	else
+	 sSkinManager->Active = false;
+  }
+}
+//---------------------------------------------------------------------------
+
 void __fastcall TGravatarForm::SaveButtonClick(TObject *Sender)
 {
   aSaveSettings->Execute();
-  aClearAvatars->Execute();
+  SaveButton->Enabled = false;
+  SettingsChanged = false;
   RefreshSettings();
-  RefreshAvatars();
-  Close();
+  int Response = MessageBox(Application->Handle,
+	"Ustawienia wtyczki Gravatar zosta³y zmienione.\n"
+	"Czy dokonaæ teraz aktualizacji awatarów?",
+	"Gravatar - aktualizacja",
+	MB_OKCANCEL | MB_ICONQUESTION);
+  //MB_OK
+  if(Response==1)
+   RefreshAvatars();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TGravatarForm::OKButtonClick(TObject *Sender)
+{
+  if(SettingsChanged)
+  {
+	aSaveSettings->Execute();
+	RefreshSettings();
+	int Response = MessageBox(Application->Handle,
+	"Ustawienia wtyczki Gravatar zosta³y zmienione.\n"
+	"Czy dokonaæ teraz aktualizacji awatarów?",
+	"Gravatar - aktualizacja",
+	MB_OKCANCEL | MB_ICONQUESTION);
+	//MB_OK
+	if(Response==1)
+	{
+	  Close();
+	  RefreshAvatars();
+	}
+	else
+	 Close();
+  }
+  else
+   Close();
 }
 //---------------------------------------------------------------------------
 
@@ -45,82 +146,69 @@ void __fastcall TGravatarForm::aExitExecute(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TGravatarForm::FormShow(TObject *Sender)
+void __fastcall TGravatarForm::aLoadSettingsExecute(TObject *Sender)
 {
-  aReadSettings->Execute();
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TGravatarForm::aReadSettingsExecute(TObject *Sender)
-{
-  GetAccountList();
-
-  eDir = GetPluginUserDir();
-
-  TIniFile *Ini = new TIniFile(eDir + "\\\\Gravatar\\\\Settings.ini");
+  //Pobieranie listy kont
+  GetAccountList(false);
+  //Odczyt ustawien
+  TIniFile *Ini = new TIniFile(GetPluginUserDir() + "\\\\Gravatar\\\\Settings.ini");
   EmailEdit->Text = Ini->ReadString("Settings","StaticEmail","");
   int pGetMode = Ini->ReadInteger("Settings","GetMode",0);
-  if(pGetMode==0)
+  if(!pGetMode)
   {
-	GetMode0RadioButton->Checked=true;
-
-	if(EmailEdit->Text=="")
-	 EmailEdit->Text="Wpisz tutaj adres e-mail";
-	EmailEdit->Enabled=false;
+	GetMode0RadioButton->Checked = true;
+	if(EmailEdit->Text.IsEmpty()) EmailEdit->Text = "Wpisz tutaj adres e-mail";
+	EmailEdit->Enabled = false;
   }
-  else if(pGetMode==1)
+  else
   {
-	GetMode1RadioButton->Checked=true;
-
-	if(EmailEdit->Text=="Wpisz tutaj adres e-mail")
-	 EmailEdit->Text="";
-	EmailEdit->Enabled=true;
+	GetMode1RadioButton->Checked = true;
+	if(EmailEdit->Text=="Wpisz tutaj adres e-mail") EmailEdit->Text = "";
+	EmailEdit->Enabled = true;
   }
   int pDefaultAvatar = Ini->ReadInteger("Settings","DefaultAvatar",0);
   switch(pDefaultAvatar)
   {
 	case 1:
-	  DefaultAvatarRadioButton1->Checked=true;
-	  DefaultAvatarBevel0->Visible=false;
-	  DefaultAvatarBevel1->Visible=true;
-	  DefaultAvatarBevel2->Visible=false;
-	  DefaultAvatarBevel3->Visible=false;
+	  DefaultAvatarRadioButton1->Checked = true;
+	  DefaultAvatarBevel0->Visible = false;
+	  DefaultAvatarBevel1->Visible = true;
+	  DefaultAvatarBevel2->Visible = false;
+	  DefaultAvatarBevel3->Visible = false;
 	  break;
 	case 2:
-	  DefaultAvatarRadioButton2->Checked=true;
-	  DefaultAvatarBevel0->Visible=false;
-	  DefaultAvatarBevel1->Visible=false;
-	  DefaultAvatarBevel2->Visible=true;
-	  DefaultAvatarBevel3->Visible=false;
+	  DefaultAvatarRadioButton2->Checked = true;
+	  DefaultAvatarBevel0->Visible = false;
+	  DefaultAvatarBevel1->Visible = false;
+	  DefaultAvatarBevel2->Visible = true;
+	  DefaultAvatarBevel3->Visible = false;
 	  break;
 	case 3:
-	  DefaultAvatarRadioButton3->Checked=true;
-	  DefaultAvatarBevel0->Visible=false;
-	  DefaultAvatarBevel1->Visible=false;
-	  DefaultAvatarBevel2->Visible=false;
-	  DefaultAvatarBevel3->Visible=true;
+	  DefaultAvatarRadioButton3->Checked = true;
+	  DefaultAvatarBevel0->Visible = false;
+	  DefaultAvatarBevel1->Visible = false;
+	  DefaultAvatarBevel2->Visible = false;
+	  DefaultAvatarBevel3->Visible = true;
 	  break;
 	default:
-	  DefaultAvatarRadioButton0->Checked=true;
-	  DefaultAvatarBevel0->Visible=true;
-	  DefaultAvatarBevel1->Visible=false;
-	  DefaultAvatarBevel2->Visible=false;
-	  DefaultAvatarBevel3->Visible=false;
+	  DefaultAvatarRadioButton0->Checked = true;
+	  DefaultAvatarBevel0->Visible = true;
+	  DefaultAvatarBevel1->Visible = false;
+	  DefaultAvatarBevel2->Visible = false;
+	  DefaultAvatarBevel3->Visible = false;
 	  break;
   }
   IntervalComboBox->ItemIndex = Ini->ReadInteger("Settings","Interval",0);
   InfoSuccessCheckBox->Checked = Ini->ReadBool("Settings","InfoSuccess",true);
   InfoFailCheckBox->Checked = Ini->ReadBool("Settings","InfoFail",false);
   int pAccountsMode = Ini->ReadInteger("Settings","AccountsMode",0);
-  if(pAccountsMode==0)
-   AccountsMode0RadioButton->Checked=true;
-  else if(pAccountsMode==1)
-   AccountsMode1RadioButton->Checked=true;
+  if(!pAccountsMode) AccountsMode0RadioButton->Checked = true;
+  else AccountsMode1RadioButton->Checked = true;
   UnicodeString pAccounts = Ini->ReadString("Settings","Accounts","");
   for(int pCount=0;pCount<AccountsCheckListBox->Items->Count;pCount++)
   {
-	if(AnsiPos(AccountsCheckListBox->Items->Strings[pCount],pAccounts)>0)
-	 AccountsCheckListBox->Checked[pCount]=true;
+	if(pAccounts.Pos(AccountsCheckListBox->Items->Strings[pCount]))
+	 AccountsCheckListBox->Checked[pCount] = true;
   }
 
   delete Ini;
@@ -129,154 +217,106 @@ void __fastcall TGravatarForm::aReadSettingsExecute(TObject *Sender)
 
 void __fastcall TGravatarForm::aSaveSettingsExecute(TObject *Sender)
 {
-  eDir = GetPluginUserDir();
-
-  TIniFile *Ini = new TIniFile(eDir + "\\\\Gravatar\\\\Settings.ini");
-  if(GetMode0RadioButton->Checked==true)
+  TIniFile *Ini = new TIniFile(GetPluginUserDir() + "\\\\Gravatar\\\\Settings.ini");
+  if(GetMode0RadioButton->Checked)
    Ini->WriteInteger("Settings","GetMode",0);
-  else if(GetMode1RadioButton->Checked==true)
+  else if(GetMode1RadioButton->Checked)
    Ini->WriteInteger("Settings","GetMode",1);
-  if(EmailEdit->Text=="Wpisz tutaj adres e-mail") EmailEdit->Text="";
+  if(EmailEdit->Text=="Wpisz tutaj adres e-mail") EmailEdit->Text = "";
   Ini->WriteString("Settings","StaticEmail",EmailEdit->Text);
-  if(DefaultAvatarRadioButton0->Checked==true)
+  if(DefaultAvatarRadioButton0->Checked)
    Ini->WriteInteger("Settings","DefaultAvatar",0);
-  else if(DefaultAvatarRadioButton1->Checked==true)
+  else if(DefaultAvatarRadioButton1->Checked)
    Ini->WriteInteger("Settings","DefaultAvatar",1);
-  else if(DefaultAvatarRadioButton2->Checked==true)
+  else if(DefaultAvatarRadioButton2->Checked)
    Ini->WriteInteger("Settings","DefaultAvatar",2);
-  else if(DefaultAvatarRadioButton3->Checked==true)
+  else if(DefaultAvatarRadioButton3->Checked)
    Ini->WriteInteger("Settings","DefaultAvatar",3);
   Ini->WriteInteger("Settings","Interval",IntervalComboBox->ItemIndex);
   Ini->WriteBool("Settings","InfoSuccess",InfoSuccessCheckBox->Checked);
   Ini->WriteBool("Settings","InfoFail",InfoFailCheckBox->Checked);
-  if(AccountsMode0RadioButton->Checked==true)
+  if(AccountsMode0RadioButton->Checked)
    Ini->WriteInteger("Settings","AccountsMode",0);
-  else if(AccountsMode1RadioButton->Checked==true)
+  else if(AccountsMode1RadioButton->Checked)
    Ini->WriteInteger("Settings","AccountsMode",1);
-  UnicodeString Accounts;
+  UnicodeString pAccounts;
   for(int Count=0;Count<AccountsCheckListBox->Items->Count;Count++)
   {
-	if(AccountsCheckListBox->Checked[Count]==true)
-	 Accounts = Accounts + AccountsCheckListBox->Items->Strings[Count] + ";";
+	if(AccountsCheckListBox->Checked[Count])
+	 pAccounts = pAccounts + AccountsCheckListBox->Items->Strings[Count] + ";";
   }
-  Ini->WriteString("Settings","Accounts",Accounts);
+  Ini->WriteString("Settings","Accounts",pAccounts);
   delete Ini;
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TGravatarForm::DefaultAvatarRadioButton0Click(TObject *Sender)
-{
-  DefaultAvatarBevel0->Visible=true;
-  DefaultAvatarBevel1->Visible=false;
-  DefaultAvatarBevel2->Visible=false;
-  DefaultAvatarBevel3->Visible=false;
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TGravatarForm::DefaultAvatarRadioButton1Click(TObject *Sender)
-{
-  DefaultAvatarBevel0->Visible=false;
-  DefaultAvatarBevel1->Visible=true;
-  DefaultAvatarBevel2->Visible=false;
-  DefaultAvatarBevel3->Visible=false;
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TGravatarForm::DefaultAvatarRadioButton2Click(TObject *Sender)
-{
-  DefaultAvatarBevel0->Visible=false;
-  DefaultAvatarBevel1->Visible=false;
-  DefaultAvatarBevel2->Visible=true;
-  DefaultAvatarBevel3->Visible=false;
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TGravatarForm::DefaultAvatarRadioButton3Click(TObject *Sender)
-{
-  DefaultAvatarBevel0->Visible=false;
-  DefaultAvatarBevel1->Visible=false;
-  DefaultAvatarBevel2->Visible=false;
-  DefaultAvatarBevel3->Visible=true;
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TGravatarForm::DefaultAvatarImage0Click(TObject *Sender)
 {
-  DefaultAvatarRadioButton0->Checked=true;
-
-  DefaultAvatarBevel0->Visible=true;
-  DefaultAvatarBevel1->Visible=false;
-  DefaultAvatarBevel2->Visible=false;
-  DefaultAvatarBevel3->Visible=false;
+  DefaultAvatarRadioButton0->Checked = true;
+  aDefaultAvatar0->Execute();
+  aAllowApply->Execute();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TGravatarForm::DefaultAvatarImage1Click(TObject *Sender)
 {
-  DefaultAvatarRadioButton1->Checked=true;
-
-  DefaultAvatarBevel0->Visible=false;
-  DefaultAvatarBevel1->Visible=true;
-  DefaultAvatarBevel2->Visible=false;
-  DefaultAvatarBevel3->Visible=false;
+  DefaultAvatarRadioButton1->Checked = true;
+  aDefaultAvatar1->Execute();
+  aAllowApply->Execute();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TGravatarForm::DefaultAvatarImage2Click(TObject *Sender)
 {
-  DefaultAvatarRadioButton2->Checked=true;
-
-  DefaultAvatarBevel0->Visible=false;
-  DefaultAvatarBevel1->Visible=false;
-  DefaultAvatarBevel2->Visible=true;
-  DefaultAvatarBevel3->Visible=false;
+  DefaultAvatarRadioButton2->Checked = true;
+  aDefaultAvatar2->Execute();
+  aAllowApply->Execute();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TGravatarForm::DefaultAvatarImage3Click(TObject *Sender)
 {
-  DefaultAvatarRadioButton3->Checked=true;
-
-  DefaultAvatarBevel0->Visible=false;
-  DefaultAvatarBevel1->Visible=false;
-  DefaultAvatarBevel2->Visible=false;
-  DefaultAvatarBevel3->Visible=true;
+  DefaultAvatarRadioButton3->Checked = true;
+  aDefaultAvatar3->Execute();
+  aAllowApply->Execute();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TGravatarForm::GetMode0RadioButtonClick(TObject *Sender)
 {
-  if(EmailEdit->Text=="")
-   EmailEdit->Text="Wpisz tutaj adres e-mail";
-  EmailEdit->Enabled=false;
+  if(EmailEdit->Text.IsEmpty()) EmailEdit->Text = "Wpisz tutaj adres e-mail";
+  EmailEdit->Enabled = false;
+  aAllowApply->Execute();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TGravatarForm::GetMode1RadioButtonClick(TObject *Sender)
 {
-  if(EmailEdit->Text=="Wpisz tutaj adres e-mail")
-   EmailEdit->Text="";
-  EmailEdit->Enabled=true;
+  if(EmailEdit->Text=="Wpisz tutaj adres e-mail") EmailEdit->Text = "";
+  EmailEdit->Enabled = true;
+  aAllowApply->Execute();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TGravatarForm::AccountsMode0RadioButtonClick(TObject *Sender)
 {
-  AccountsCheckListBox->Enabled=false;
+  AccountsCheckListBox->Enabled = false;
+  aAllowApply->Execute();
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TGravatarForm::AccountsMode1RadioButtonClick(TObject *Sender)
 {
-  AccountsCheckListBox->Enabled=true;
+  aAllowApply->Execute();
+  AccountsCheckListBox->Enabled = true;
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TGravatarForm::StartTimerTimer(TObject *Sender)
 {
   RefreshAvatars();
-  StartTimer->Enabled=false;
-  Timer->Enabled=true;
+  StartTimer->Enabled = false;
+  Timer->Enabled = true;
 }
 //---------------------------------------------------------------------------
 
@@ -286,38 +326,61 @@ void __fastcall TGravatarForm::TimerTimer(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TGravatarForm::DeleteFiles(UnicodeString DirName, UnicodeString Prefix)
+void __fastcall TGravatarForm::aDefaultAvatar0Execute(TObject *Sender)
 {
-  TSearchRec sr;
-  int result;
-  UnicodeString FileName;
+  DefaultAvatarBevel0->Visible = true;
+  DefaultAvatarBevel1->Visible = false;
+  DefaultAvatarBevel2->Visible = false;
+  DefaultAvatarBevel3->Visible = false;
+  aAllowApply->Execute();
+}
+//---------------------------------------------------------------------------
 
-  result = FindFirst(DirName + "*.*", faAnyFile, sr);
+void __fastcall TGravatarForm::aDefaultAvatar1Execute(TObject *Sender)
+{
+  DefaultAvatarBevel0->Visible = false;
+  DefaultAvatarBevel1->Visible = true;
+  DefaultAvatarBevel2->Visible = false;
+  DefaultAvatarBevel3->Visible = false;
+  aAllowApply->Execute();
+}
+//---------------------------------------------------------------------------
 
-  while(result == 0)
+void __fastcall TGravatarForm::aDefaultAvatar2Execute(TObject *Sender)
+{
+  DefaultAvatarBevel0->Visible = false;
+  DefaultAvatarBevel1->Visible = false;
+  DefaultAvatarBevel2->Visible = true;
+  DefaultAvatarBevel3->Visible = false;
+  aAllowApply->Execute();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TGravatarForm::aDefaultAvatar3Execute(TObject *Sender)
+{
+  DefaultAvatarBevel0->Visible = false;
+  DefaultAvatarBevel1->Visible = false;
+  DefaultAvatarBevel2->Visible = false;
+  DefaultAvatarBevel3->Visible = true;
+  aAllowApply->Execute();
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TGravatarForm::aPageControlSheetChangeExecute(TObject *Sender)
+{
+  if(!SaveButton->Focused()&&!CancelButton->Focused()&&!OKButton->Focused())
   {
-	if((sr.Name != ".") && (sr.Name != "..") && (!(sr.Attr & faDirectory) > 0))
-	{
-	  if(ExtractFileExt(sr.Name).SubString(2, 5) == Prefix)
-	  {
-		FileName = DirName + sr.Name;
-	  }
-	  if(Prefix == "*")
-	  {
-		FileName = DirName + sr.Name;
-	  }
-	  DeleteFile(FileName);
-	}
-	result = FindNext(sr);
+	if(PageControl->TabIndex!=3)
+	 PageControl->TabIndex = PageControl->TabIndex + 1;
+	else
+	 PageControl->TabIndex = 0;
   }
-  FindClose(sr);
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TGravatarForm::aClearAvatarsExecute(TObject *Sender)
+void __fastcall TGravatarForm::aAllowApplyExecute(TObject *Sender)
 {
-  eDir = GetPluginUserDirW();
-  DeleteFiles(eDir + "\\Gravatar\\Avatars\\", "*");
+  SaveButton->Enabled = true;
+  SettingsChanged = true;
 }
 //---------------------------------------------------------------------------
-
