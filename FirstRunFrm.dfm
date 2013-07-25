@@ -853,9 +853,9 @@ object FirstRunForm: TFirstRunForm
     object AccountsMode0RadioButton: TsRadioButton
       Left = 16
       Top = 27
-      Width = 246
+      Width = 210
       Height = 20
-      Caption = 'Ustawiaj awatar we wszystkich kontach Jabber'
+      Caption = 'Ustawiaj awatar we wszystkich kontach'
       Checked = True
       TabOrder = 0
       TabStop = True
@@ -923,9 +923,9 @@ object FirstRunForm: TFirstRunForm
       Caption = 'Pokazuj chmurk'#281' informacyjn'#261', gdy:'
     end
     object IntervalComboBox: TsComboBox
-      Left = 16
+      Left = 10
       Top = 40
-      Width = 145
+      Width = 135
       Height = 21
       Alignment = taLeftJustify
       BoundLabel.Indent = 0
@@ -957,7 +957,7 @@ object FirstRunForm: TFirstRunForm
       Caption = 'Pomy'#347'lnie zaktualizowano awatar'
       Checked = True
       State = cbChecked
-      TabOrder = 1
+      TabOrder = 2
       SkinData.SkinSection = 'CHECKBOX'
       ImgChecked = 0
       ImgUnchecked = 0
@@ -969,11 +969,23 @@ object FirstRunForm: TFirstRunForm
       Width = 183
       Height = 20
       Caption = 'Wyst'#261'pi'#322' b'#322#261'd podczas aktualizacji'
-      TabOrder = 2
+      TabOrder = 3
       SkinData.SkinSection = 'CHECKBOX'
       ImgChecked = 0
       ImgUnchecked = 0
       WordWrap = True
+    end
+    object ForceUpdateCheckBox: TsCheckBox
+      Left = 150
+      Top = 41
+      Width = 128
+      Height = 20
+      Caption = 'Wymuszaj aktualizacj'#281
+      TabOrder = 1
+      OnClick = ForceUpdateCheckBoxClick
+      SkinData.SkinSection = 'CHECKBOX'
+      ImgChecked = 0
+      ImgUnchecked = 0
     end
   end
   object Panel3: TsPanel
@@ -1497,7 +1509,6 @@ object FirstRunForm: TFirstRunForm
   end
   object sSkinManager: TsSkinManager
     ExtendedBorders = True
-    IsDefault = False
     Active = False
     InternalSkins = <>
     MenuSupport.IcoLineSkin = 'ICOLINE'

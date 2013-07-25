@@ -84,6 +84,7 @@ __published:	// IDE-managed Components
 	TAction *aDefaultAvatar1;
 	TAction *aDefaultAvatar2;
 	TAction *aDefaultAvatar3;
+	TsCheckBox *ForceUpdateCheckBox;
 	void __fastcall SaveButtonClick(TObject *Sender);
 	void __fastcall GetMode1RadioButtonClick(TObject *Sender);
 	void __fastcall GetMode0RadioButtonClick(TObject *Sender);
@@ -102,6 +103,7 @@ __published:	// IDE-managed Components
 	void __fastcall aDefaultAvatar1Execute(TObject *Sender);
 	void __fastcall aDefaultAvatar2Execute(TObject *Sender);
 	void __fastcall aDefaultAvatar3Execute(TObject *Sender);
+	void __fastcall ForceUpdateCheckBoxClick(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
 	__fastcall TFirstRunForm(TComponent* Owner);

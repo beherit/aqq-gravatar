@@ -680,6 +680,10 @@ object GravatarForm: TGravatarForm
       Caption = 'Domy'#347'lny awatar'
       SkinData.CustomColor = False
       SkinData.CustomFont = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object DefaultAvatarBevel0: TsBevel
         Left = 183
         Top = 49
@@ -964,6 +968,10 @@ object GravatarForm: TGravatarForm
       ImageIndex = 1
       SkinData.CustomColor = False
       SkinData.CustomFont = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GetModeLabel: TsLabel
         Left = 6
         Top = 6
@@ -1023,6 +1031,10 @@ object GravatarForm: TGravatarForm
       ImageIndex = 2
       SkinData.CustomColor = False
       SkinData.CustomFont = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object InfoLabel: TsLabel
         Left = 6
         Top = 70
@@ -1051,7 +1063,7 @@ object GravatarForm: TGravatarForm
         Width = 183
         Height = 20
         Caption = 'Wyst'#261'pi'#322' b'#322#261'd podczas aktualizacji'
-        TabOrder = 2
+        TabOrder = 3
         OnClick = aAllowApplyExecute
         SkinData.SkinSection = 'CHECKBOX'
         ImgChecked = 0
@@ -1066,7 +1078,7 @@ object GravatarForm: TGravatarForm
         Caption = 'Pomy'#347'lnie zaktualizowano awatar'
         Checked = True
         State = cbChecked
-        TabOrder = 1
+        TabOrder = 2
         OnClick = aAllowApplyExecute
         SkinData.SkinSection = 'CHECKBOX'
         ImgChecked = 0
@@ -1074,9 +1086,9 @@ object GravatarForm: TGravatarForm
         WordWrap = True
       end
       object IntervalComboBox: TsComboBox
-        Left = 14
+        Left = 12
         Top = 25
-        Width = 145
+        Width = 135
         Height = 21
         Alignment = taLeftJustify
         BoundLabel.Indent = 0
@@ -1101,12 +1113,29 @@ object GravatarForm: TGravatarForm
           'Co trzy godziny'
           'Co cztery godziny')
       end
+      object ForceUpdateCheckBox: TsCheckBox
+        Left = 153
+        Top = 26
+        Width = 128
+        Height = 20
+        Caption = 'Wymuszaj aktualizacj'#281
+        TabOrder = 1
+        OnClick = ForceUpdateCheckBoxClick
+        SkinData.SkinSection = 'CHECKBOX'
+        ImgChecked = 0
+        ImgUnchecked = 0
+        WordWrap = True
+      end
     end
     object AccountsTabSheet: TsTabSheet
       Caption = 'Konta'
       ImageIndex = 3
       SkinData.CustomColor = False
       SkinData.CustomFont = False
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object AccountsLabel: TsLabel
         Left = 6
         Top = 6
@@ -1141,9 +1170,9 @@ object GravatarForm: TGravatarForm
       object AccountsMode0RadioButton: TsRadioButton
         Left = 14
         Top = 25
-        Width = 246
+        Width = 210
         Height = 20
-        Caption = 'Ustawiaj awatar we wszystkich kontach Jabber'
+        Caption = 'Ustawiaj awatar we wszystkich kontach'
         Checked = True
         TabOrder = 0
         TabStop = True

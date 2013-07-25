@@ -92,6 +92,7 @@ __published:	// IDE-managed Components
 	TAction *aPageControlSheetChange;
 	TAction *aAllowApply;
 	TIdAntiFreeze *IdAntiFreeze;
+	TsCheckBox *ForceUpdateCheckBox;
 	void __fastcall SaveButtonClick(TObject *Sender);
 	void __fastcall aExitExecute(TObject *Sender);
 	void __fastcall FormShow(TObject *Sender);
@@ -115,6 +116,7 @@ __published:	// IDE-managed Components
 	void __fastcall OKButtonClick(TObject *Sender);
 	void __fastcall aPageControlSheetChangeExecute(TObject *Sender);
 	void __fastcall aAllowApplyExecute(TObject *Sender);
+	void __fastcall ForceUpdateCheckBoxClick(TObject *Sender);
 private:	// User declarations
 	void __fastcall DeleteFiles(UnicodeString DirName, UnicodeString Prefix);
 public:		// User declarations
