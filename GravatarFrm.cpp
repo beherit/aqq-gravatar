@@ -6,13 +6,6 @@
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma link "acPNG"
-#pragma link "IdAntiFreeze"
-#pragma link "IdAntiFreezeBase"
-#pragma link "IdBaseComponent"
-#pragma link "IdComponent"
-#pragma link "IdHTTP"
-#pragma link "IdTCPClient"
-#pragma link "IdTCPConnection"
 #pragma link "sBevel"
 #pragma link "sButton"
 #pragma link "sCheckBox"
@@ -110,9 +103,9 @@ void __fastcall TGravatarForm::SaveButtonClick(TObject *Sender)
   LoadSettings(false);
   //Odswiezenie awatarow
   int Response = MessageBox(Application->Handle,
-	"Ustawienia wtyczki Gravatar zosta³y zmienione.\n"
-	"Czy dokonaæ teraz aktualizacji awatarów?",
-	"Gravatar - aktualizacja",
+	L"Ustawienia wtyczki Gravatar zosta³y zmienione.\n"
+	L"Czy dokonaæ teraz aktualizacji awatarów?",
+	L"Gravatar - aktualizacja",
 	MB_OKCANCEL | MB_ICONQUESTION);
   //MB_OK
   if(Response==1)
@@ -138,9 +131,9 @@ void __fastcall TGravatarForm::OKButtonClick(TObject *Sender)
 	LoadSettings(false);
     //Odswiezenie awatarow
 	int Response = MessageBox(Application->Handle,
-	"Ustawienia wtyczki Gravatar zosta³y zmienione.\n"
-	"Czy dokonaæ teraz aktualizacji awatarów?",
-	"Gravatar - aktualizacja",
+	L"Ustawienia wtyczki Gravatar zosta³y zmienione.\n"
+	L"Czy dokonaæ teraz aktualizacji awatarów?",
+	L"Gravatar - aktualizacja",
 	MB_OKCANCEL | MB_ICONQUESTION);
 	//MB_OK
 	if(Response==1)
@@ -416,17 +409,5 @@ void __fastcall TGravatarForm::aAllowApplyExecute(TObject *Sender)
 {
   SaveButton->Enabled = true;
   SettingsChanged = true;
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TGravatarForm::aPageControlSheetChangeExecute(TObject *Sender)
-{
-  if(!SaveButton->Focused()&&!CancelButton->Focused()&&!OKButton->Focused())
-  {
-	if(PageControl->TabIndex!=3)
-	 PageControl->TabIndex = PageControl->TabIndex + 1;
-	else
-	 PageControl->TabIndex = 0;
-  }
 }
 //---------------------------------------------------------------------------

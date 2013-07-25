@@ -1,15 +1,13 @@
-//---------------------------------------------------------------------------
 #include <vcl.h>
 #include <windows.h>
 #pragma hdrstop
 #pragma argsused
-#include "Aqq.h"
 #include "GravatarFrm.h"
 #include "FirstRunFrm.h"
+#include <PluginAPI.h>
 #include "fstream.h"
 #include <IdHashMessageDigest.hpp>
 #include <boost\scoped_ptr.hpp>
-//---------------------------------------------------------------------------
 
 int WINAPI DllEntryPoint(HINSTANCE hinst, unsigned long reason, void* lpReserved)
 {
@@ -43,7 +41,7 @@ int __stdcall OnThemeChanged(WPARAM wParam, LPARAM lParam);
 //Pobieranie sciezki do skorki kompozycji
 UnicodeString GetThemeSkinDir()
 {
-  return StringReplace((wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETTHEMEDIR,0,0)), "\\", "\\\\", TReplaceFlags() << rfReplaceAll) + "\\\\Skin";
+  return StringReplace((wchar_t*)PluginLink.CallService(AQQ_FUNCTION_GETTHEMEDIR,0,0), "\\", "\\\\", TReplaceFlags() << rfReplaceAll) + "\\\\Skin";
 }
 //---------------------------------------------------------------------------
 
@@ -58,7 +56,7 @@ UnicodeString GetPluginUserDir()
 bool ChkSkinEnabled()
 {
   TStrings* IniList = new TStringList();
-  IniList->SetText((wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_FETCHSETUP,0,0)));
+  IniList->SetText((wchar_t*)PluginLink.CallService(AQQ_FUNCTION_FETCHSETUP,0,0));
   TMemIniFile *Settings = new TMemIniFile(ChangeFileExt(Application->ExeName, ".INI"));
   Settings->SetStrings(IniList);
   delete IniList;
@@ -72,7 +70,7 @@ bool ChkSkinEnabled()
 bool ChkNativeEnabled()
 {
   TStrings* IniList = new TStringList();
-  IniList->SetText((wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_FETCHSETUP,0,0)));
+  IniList->SetText((wchar_t*)PluginLink.CallService(AQQ_FUNCTION_FETCHSETUP,0,0));
   TMemIniFile *Settings = new TMemIniFile(ChangeFileExt(Application->ExeName, ".INI"));
   Settings->SetStrings(IniList);
   delete IniList;
@@ -142,15 +140,15 @@ UnicodeString MD5(const UnicodeString Text)
 //---------------------------------------------------------------------------
 
 //Obliczanie sumy kontrolnej pliku
-UnicodeString MD5File(const UnicodeString FileName)
+UnicodeString MD5File(UnicodeString FileName)
 {
   if(FileExists(FileName))
   {
-	String Result;
-    TFileStream *fs;
+	UnicodeString Result;
+	TFileStream *fs;
 
-    fs = new TFileStream(FileName, fmOpenRead | fmShareDenyWrite);
-    try
+	fs = new TFileStream(FileName, fmOpenRead | fmShareDenyWrite);
+	try
 	{
 	  TIdHashMessageDigest5 *idmd5= new TIdHashMessageDigest5();
 	  try
@@ -161,7 +159,7 @@ UnicodeString MD5File(const UnicodeString FileName)
 	  {
 	    delete idmd5;
 	  }
-	}
+    }
 	__finally
 	{
 	  delete fs;
@@ -171,22 +169,6 @@ UnicodeString MD5File(const UnicodeString FileName)
   }
   else
    return 0;
-}
-//---------------------------------------------------------------------------
-
-//Zapisywanie zasobów
-bool SaveResourceToFile(char *FileName, char *res)
-{
-  HRSRC hrsrc = FindResource(HInstance, res, RT_RCDATA);
-  if(!hrsrc) return false;
-  DWORD size = SizeofResource(HInstance, hrsrc);
-  HGLOBAL hglob = LoadResource(HInstance, hrsrc);
-  LPVOID rdata = LockResource(hglob);
-  HANDLE hFile = CreateFile(FileName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-  DWORD writ;
-  WriteFile(hFile, rdata, size, &writ, NULL);
-  CloseHandle(hFile);
-  return true;
 }
 //---------------------------------------------------------------------------
 
@@ -278,7 +260,7 @@ void ShowUpdateMessage(UnicodeString AccountJID)
 	PluginShowInfo.cbSize = sizeof(TPluginShowInfo);
 	PluginShowInfo.Event = tmeInfo;
 	PluginShowInfo.Text = ("Zaktualizowano awatar dla konta " + AccountJID).w_str();
-	PluginShowInfo.ImagePath = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETPNG_FILEPATH,19,0));
+	PluginShowInfo.ImagePath = (wchar_t*)PluginLink.CallService(AQQ_FUNCTION_GETPNG_FILEPATH,19,0);
 	PluginShowInfo.TimeOut = 1000 * 4;
 	PluginLink.CallService(AQQ_FUNCTION_SHOWINFO,0,(LPARAM)(&PluginShowInfo));
   }
@@ -297,7 +279,7 @@ void ShowFailMessage(UnicodeString AccountJID)
 	PluginShowInfo.cbSize = sizeof(TPluginShowInfo);
 	PluginShowInfo.Event = tmeInfo;
 	PluginShowInfo.Text = ("Wyst¹pi³ b³¹d podczas aktualizacji awatara dla konta " + AccountJID).w_str();
-	PluginShowInfo.ImagePath = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETPNG_FILEPATH,85,0));
+	PluginShowInfo.ImagePath = (wchar_t*)PluginLink.CallService(AQQ_FUNCTION_GETPNG_FILEPATH,85,0);
 	PluginShowInfo.TimeOut = 1000 * 4;
 	PluginLink.CallService(AQQ_FUNCTION_SHOWINFO,0,(LPARAM)(&PluginShowInfo));
   }
@@ -377,7 +359,7 @@ void RefreshAvatars()
 		TPluginContactSimpleInfo PluginContactSimpleInfo;
 		PluginContactSimpleInfo.JID = JID.w_str();
 		PluginLink.CallService(AQQ_CONTACTS_FILLSIMPLEINFO,0,(LPARAM)(&PluginContactSimpleInfo));
-		AvatarFile = (wchar_t*)(PluginContactSimpleInfo.Mail);
+		AvatarFile = (wchar_t*)PluginContactSimpleInfo.Mail;
 		if(AvatarFile.Pos("\n")) AvatarFile.Delete(AvatarFile.Pos("\n"), AvatarFile.Length());
 	  }
 	  //Statyczny adres e-mail
@@ -423,22 +405,22 @@ void RefreshAvatars()
 			//Zmiana nazwy pliku w stosunku do jego typu
 			if((FileFormat==0)||(FileFormat==1))
 			{
-			  MoveFile((PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".tmp").t_str(),(PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".gif.tmp").t_str());
+			  MoveFile((PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".tmp").w_str(),(PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".gif.tmp").w_str());
 			  AvatarFile = AvatarFile + ".gif";
 			}
 			else if(FileFormat==2)
 			{
-			  MoveFile((PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".tmp").t_str(),(PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".jpg.tmp").t_str());
+			  MoveFile((PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".tmp").w_str(),(PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".jpg.tmp").w_str());
 			  AvatarFile = AvatarFile + ".jpg";
 			}
 			else if(FileFormat==3)
 			{
-			  MoveFile((PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".tmp").t_str(),(PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".png.tmp").t_str());
+			  MoveFile((PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".tmp").w_str(),(PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".png.tmp").w_str());
 			  AvatarFile = AvatarFile + ".png";
 			}
 			else if(FileFormat==4)
 			{
-			  MoveFile((PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".tmp").t_str(),(PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".bmp.tmp").t_str());
+			  MoveFile((PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".tmp").w_str(),(PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".bmp.tmp").w_str());
 			  AvatarFile = AvatarFile + ".bmp";
 			}
 			//Sprawdzanie MD5 pliku
@@ -448,7 +430,7 @@ void RefreshAvatars()
 			  {
 				//Usuniecie starego awatara
 				DeleteFile((PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile));
-				MoveFile((PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".tmp").t_str(),(PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile).t_str());
+				MoveFile((PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".tmp").w_str(),(PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile).w_str());
 				//Aktualizacja awatara na serwerze Jabber
 				if(!PluginStateChange.FromPlugin)
 				{
@@ -622,6 +604,22 @@ void LoadSettings(bool OnLoad)
 }
 //---------------------------------------------------------------------------
 
+//Zapisywanie zasobów
+bool SaveResourceToFile(wchar_t* FileName, wchar_t* Res)
+{
+  HRSRC hrsrc = FindResource(HInstance, Res, RT_RCDATA);
+  if(!hrsrc) return false;
+  DWORD size = SizeofResource(HInstance, hrsrc);
+  HGLOBAL hglob = LoadResource(HInstance, hrsrc);
+  LPVOID rdata = LockResource(hglob);
+  HANDLE hFile = CreateFile(FileName, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+  DWORD writ;
+  WriteFile(hFile, rdata, size, &writ, NULL);
+  CloseHandle(hFile);
+  return true;
+}
+//---------------------------------------------------------------------------
+
 extern "C" int __declspec(dllexport) __stdcall Load(PPluginLink Link)
 {
   //Linkowanie wtyczki z komunikatorem
@@ -635,9 +633,9 @@ extern "C" int __declspec(dllexport) __stdcall Load(PPluginLink Link)
   if(!DirectoryExists(PluginUserDir+"\\\\Shared"))
    CreateDir(PluginUserDir+"\\\\Shared");
   if(!FileExists(PluginUserDir+"\\\\Shared\\\\Gravatar.dll.png"))
-   SaveResourceToFile((PluginUserDir+"\\\\Shared\\\\Gravatar.dll.png").t_str(),"PLUGIN_RES");
+   SaveResourceToFile((PluginUserDir+"\\\\Shared\\\\Gravatar.dll.png").w_str(),L"PLUGIN_RES");
   else if(MD5File(PluginUserDir+"\\\\Shared\\\\Gravatar.dll.png")!="FA5BB69CDDDD3D7350FAA9187E438FA0")
-   SaveResourceToFile((PluginUserDir+"\\\\Shared\\\\Gravatar.dll.png").t_str(),"PLUGIN_RES");
+   SaveResourceToFile((PluginUserDir+"\\\\Shared\\\\Gravatar.dll.png").w_str(),L"PLUGIN_RES");
   //Tworzeniu katalogu z ustawieniami wtyczki
   if(!DirectoryExists(PluginUserDir+"\\\\Gravatar"))
    CreateDir(PluginUserDir+"\\\\Gravatar");
@@ -682,18 +680,6 @@ extern "C" int __declspec(dllexport) __stdcall Load(PPluginLink Link)
 }
 //---------------------------------------------------------------------------
 
-extern "C" int __declspec(dllexport) __stdcall Unload()
-{
-  //Anty "Abnormal program termination"
-  hGravatarForm->IdHTTP->Disconnect();
-  //Wyladowanie wszystkich hookow
-  PluginLink.UnhookEvent(OnModulesLoaded);
-  PluginLink.UnhookEvent(OnThemeChanged);
-
-  return 0;
-}
-//---------------------------------------------------------------------------
-
 //Ustawienia wtyczki
 extern "C" int __declspec(dllexport)__stdcall Settings()
 {
@@ -710,19 +696,30 @@ extern "C" int __declspec(dllexport)__stdcall Settings()
 }
 //---------------------------------------------------------------------------
 
+extern "C" int __declspec(dllexport) __stdcall Unload()
+{
+  //Anty "Abnormal program termination"
+  hGravatarForm->IdHTTP->Disconnect();
+  //Wyladowanie wszystkich hookow
+  PluginLink.UnhookEvent(OnModulesLoaded);
+  PluginLink.UnhookEvent(OnThemeChanged);
+
+  return 0;
+}
+//---------------------------------------------------------------------------
+
 //Informacje o wtyczce
 extern "C" __declspec(dllexport) PPluginInfo __stdcall AQQPluginInfo(DWORD AQQVersion)
 {
   PluginInfo.cbSize = sizeof(TPluginInfo);
-  PluginInfo.ShortName = (wchar_t*)L"Gravatar";
-  PluginInfo.Version = PLUGIN_MAKE_VERSION(1,1,3,0);
-  PluginInfo.Description = (wchar_t*)L"Aktualizacja awatarów na podstawie danych w serwisie gravatar.com";
-  PluginInfo.Author = (wchar_t*)L"Krzysztof Grochocki (Beherit)";
-  PluginInfo.AuthorMail = (wchar_t*)L"kontakt@beherit.pl";
-  PluginInfo.Copyright = (wchar_t*)L"Krzysztof Grochocki (Beherit)";
-  PluginInfo.Homepage = (wchar_t*)L"http://beherit.pl";
+  PluginInfo.ShortName = L"Gravatar";
+  PluginInfo.Version = PLUGIN_MAKE_VERSION(1,2,0,0);
+  PluginInfo.Description = L"Wtyczka pilnuje, aby we wszystkich sieciach by³ ustawiony zawsze aktualny awatar okreœlony w serwisie gravatar.com.";
+  PluginInfo.Author = L"Krzysztof Grochocki (Beherit)";
+  PluginInfo.AuthorMail = L"kontakt@beherit.pl";
+  PluginInfo.Copyright = L"Krzysztof Grochocki (Beherit)";
+  PluginInfo.Homepage = L"http://beherit.pl";
 
   return &PluginInfo;
 }
 //---------------------------------------------------------------------------
-
