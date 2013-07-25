@@ -1,6 +1,7 @@
 //---------------------------------------------------------------------------
 #ifndef FirstRunFrmH
 #define FirstRunFrmH
+#define WM_ALPHAWINDOWS (WM_USER + 666)
 //---------------------------------------------------------------------------
 #include "acPNG.hpp"
 #include "sBevel.hpp"
@@ -103,6 +104,10 @@ __published:	// IDE-managed Components
 private:	// User declarations
 public:		// User declarations
 	__fastcall TFirstRunForm(TComponent* Owner);
+	void __fastcall WMTransparency(TMessage &Message);
+	BEGIN_MESSAGE_MAP
+	MESSAGE_HANDLER(WM_ALPHAWINDOWS,TMessage,WMTransparency);
+	END_MESSAGE_MAP(TForm)
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TFirstRunForm *FirstRunForm;

@@ -1731,7 +1731,6 @@ object FirstRunForm: TFirstRunForm
   end
   object sSkinManager: TsSkinManager
     ExtendedBorders = True
-    IsDefault = False
     Active = False
     InternalSkins = <>
     MenuSupport.IcoLineSkin = 'ICOLINE'

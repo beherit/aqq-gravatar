@@ -1,3 +1,12 @@
+1.3.0.0
+-----
+* Dodanie 64-bitowej wersji wtyczki.
+* Wsparcie dla wtyczki AlphaWindows (ustawianie przeŸroczystoœci obramowania).
+* Drobne zmiany w skórkowaniu form ustawieñ.
+* Zmiana sposobu wypakowywania plików z zasobów wtyczki.
+* Zmniejszenie rozmiaru wtyczki 32-bitowej poprzez u¿ycie kompresji LZMA.
+* Aktualizacja komponentów AlphaControls do nowszej wersji (8.20).
+
 1.2.0.0
 -----
 * Przepisanie wtyczki pod kompilator Embarcadero C++ Builder XE3.
