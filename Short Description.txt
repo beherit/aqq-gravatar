@@ -1,0 +1,1 @@
+Wtyczka pilnuje, aby we wszystkich sieciach by³ ustawiony zawsze aktualny awatar okreœlony w serwisie gravatar.com.
