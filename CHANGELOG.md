@@ -1,3 +1,8 @@
+1.1.2.0
+-----
+* Opcja wymuszania aktualizacji.
+* Poprawki w oprawie tekstowej form wtyczki.
+
 1.1.0.0
 -----
 * Pe³ne skórkowanie wszystkich okien wtyczki.

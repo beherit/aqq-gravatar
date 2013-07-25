@@ -112,6 +112,7 @@ void __fastcall TFirstRunForm::aSaveSettingsExecute(TObject *Sender)
   else if(DefaultAvatarRadioButton3->Checked)
    Ini->WriteInteger("Settings","DefaultAvatar",3);
   Ini->WriteInteger("Settings","Interval",IntervalComboBox->ItemIndex);
+  Ini->WriteBool("Settings","ForceUpdate",ForceUpdateCheckBox->Checked);
   Ini->WriteBool("Settings","InfoSuccess",InfoSuccessCheckBox->Checked);
   Ini->WriteBool("Settings","InfoFail",InfoFailCheckBox->Checked);
   if(AccountsMode0RadioButton->Checked)
@@ -298,5 +299,10 @@ void __fastcall TFirstRunForm::aDefaultAvatar3Execute(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
-
+void __fastcall TFirstRunForm::ForceUpdateCheckBoxClick(TObject *Sender)
+{
+  InfoSuccessCheckBox->Enabled = !ForceUpdateCheckBox->Checked;
+  InfoFailCheckBox->Enabled = !ForceUpdateCheckBox->Checked;
+}
+//---------------------------------------------------------------------------
 

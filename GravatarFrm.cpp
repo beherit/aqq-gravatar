@@ -199,6 +199,9 @@ void __fastcall TGravatarForm::aLoadSettingsExecute(TObject *Sender)
 	  break;
   }
   IntervalComboBox->ItemIndex = Ini->ReadInteger("Settings","Interval",0);
+  ForceUpdateCheckBox->Checked = Ini->ReadBool("Settings","ForceUpdate",false);
+  InfoSuccessCheckBox->Enabled = !ForceUpdateCheckBox->Checked;
+  InfoFailCheckBox->Enabled = !ForceUpdateCheckBox->Checked;
   InfoSuccessCheckBox->Checked = Ini->ReadBool("Settings","InfoSuccess",true);
   InfoFailCheckBox->Checked = Ini->ReadBool("Settings","InfoFail",false);
   int pAccountsMode = Ini->ReadInteger("Settings","AccountsMode",0);
@@ -233,6 +236,7 @@ void __fastcall TGravatarForm::aSaveSettingsExecute(TObject *Sender)
   else if(DefaultAvatarRadioButton3->Checked)
    Ini->WriteInteger("Settings","DefaultAvatar",3);
   Ini->WriteInteger("Settings","Interval",IntervalComboBox->ItemIndex);
+  Ini->WriteBool("Settings","ForceUpdate",ForceUpdateCheckBox->Checked);
   Ini->WriteBool("Settings","InfoSuccess",InfoSuccessCheckBox->Checked);
   Ini->WriteBool("Settings","InfoFail",InfoFailCheckBox->Checked);
   if(AccountsMode0RadioButton->Checked)
@@ -384,3 +388,12 @@ void __fastcall TGravatarForm::aAllowApplyExecute(TObject *Sender)
   SettingsChanged = true;
 }
 //---------------------------------------------------------------------------
+
+void __fastcall TGravatarForm::ForceUpdateCheckBoxClick(TObject *Sender)
+{
+  InfoSuccessCheckBox->Enabled = !ForceUpdateCheckBox->Checked;
+  InfoFailCheckBox->Enabled = !ForceUpdateCheckBox->Checked;
+  aAllowApply->Execute();
+}
+//---------------------------------------------------------------------------
+

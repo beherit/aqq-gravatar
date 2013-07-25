@@ -28,6 +28,7 @@ TPluginInfo PluginInfo;
 int GetMode;
 UnicodeString StaticEmail;
 int DefaultAvatar;
+bool ForceUpdate;
 bool InfoSuccess;
 bool InfoFail;
 int AccountsMode;
@@ -229,30 +230,36 @@ UnicodeString MD5File(const UnicodeString FileName)
 //Info o pomyslnej aktualizacji
 void ShowUpdateMessage(UnicodeString AccountJID)
 {
-  if(AccountJID.Pos("@plugin.gg")) AccountJID = "GG " + AccountJID.Delete(AccountJID.Pos("@plugin.gg"),AccountJID.Length());
-  //else AccountJID = "Jabber " + AccountJID;
-  TPluginShowInfo PluginShowInfo;
-  PluginShowInfo.cbSize = sizeof(TPluginShowInfo);
-  PluginShowInfo.Event = tmeInfo;
-  PluginShowInfo.Text = ("Zaktualizowano awatar dla konta " + AccountJID).w_str();
-  PluginShowInfo.ImagePath = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETPNG_FILEPATH,19,0));
-  PluginShowInfo.TimeOut = 1000 * 4;
-  PluginLink.CallService(AQQ_FUNCTION_SHOWINFO,0,(LPARAM)(&PluginShowInfo));
+  if(!ForceUpdate)
+  {
+	if(AccountJID.Pos("@plugin.gg")) AccountJID = "GG " + AccountJID.Delete(AccountJID.Pos("@plugin.gg"),AccountJID.Length());
+	//else AccountJID = "Jabber " + AccountJID;
+	TPluginShowInfo PluginShowInfo;
+	PluginShowInfo.cbSize = sizeof(TPluginShowInfo);
+	PluginShowInfo.Event = tmeInfo;
+	PluginShowInfo.Text = ("Zaktualizowano awatar dla konta " + AccountJID).w_str();
+	PluginShowInfo.ImagePath = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETPNG_FILEPATH,19,0));
+	PluginShowInfo.TimeOut = 1000 * 4;
+	PluginLink.CallService(AQQ_FUNCTION_SHOWINFO,0,(LPARAM)(&PluginShowInfo));
+  }
 }
 //---------------------------------------------------------------------------
 
 //Info o bledzie podczas aktualizacji
 void ShowFailMessage(UnicodeString AccountJID)
 {
-  if(AccountJID.Pos("@plugin.gg")) AccountJID = "GG " + AccountJID.Delete(AccountJID.Pos("@plugin.gg"),AccountJID.Length());
-  //else AccountJID = "Jabber " + AccountJID;
-  TPluginShowInfo PluginShowInfo;
-  PluginShowInfo.cbSize = sizeof(TPluginShowInfo);
-  PluginShowInfo.Event = tmeInfo;
-  PluginShowInfo.Text = ("Wyst¹pi³ b³¹d podczas aktualizacji awatara dla konta " + AccountJID).w_str();
-  PluginShowInfo.ImagePath = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETPNG_FILEPATH,85,0));
-  PluginShowInfo.TimeOut = 1000 * 4;
-  PluginLink.CallService(AQQ_FUNCTION_SHOWINFO,0,(LPARAM)(&PluginShowInfo));
+  if(!ForceUpdate)
+  {
+	if(AccountJID.Pos("@plugin.gg")) AccountJID = "GG " + AccountJID.Delete(AccountJID.Pos("@plugin.gg"),AccountJID.Length());
+	//else AccountJID = "Jabber " + AccountJID;
+	TPluginShowInfo PluginShowInfo;
+	PluginShowInfo.cbSize = sizeof(TPluginShowInfo);
+	PluginShowInfo.Event = tmeInfo;
+	PluginShowInfo.Text = ("Wyst¹pi³ b³¹d podczas aktualizacji awatara dla konta " + AccountJID).w_str();
+	PluginShowInfo.ImagePath = (wchar_t*)(PluginLink.CallService(AQQ_FUNCTION_GETPNG_FILEPATH,85,0));
+	PluginShowInfo.TimeOut = 1000 * 4;
+	PluginLink.CallService(AQQ_FUNCTION_SHOWINFO,0,(LPARAM)(&PluginShowInfo));
+  }
 }
 //---------------------------------------------------------------------------
 
@@ -396,7 +403,7 @@ void RefreshAvatars()
 			//Sprawdzanie MD5 pliku
 			if((FileFormat!=-1)&&(FileFormat!=-2))
 			{
-			  if(MD5File((PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile))!=MD5File((PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".tmp")))
+			  if((MD5File((PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile))!=MD5File((PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".tmp")))||(ForceUpdate))
 			  {
 				//Usuniecie starego awatara
 				DeleteFile((PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile));
@@ -497,6 +504,7 @@ void RefreshSettings()
   StaticEmail = Ini->ReadString("Settings","StaticEmail","");
   DefaultAvatar = Ini->ReadInteger("Settings","DefaultAvatar",0);
   int Interval = Ini->ReadInteger("Settings","Interval",0);
+  ForceUpdate = Ini->ReadBool("Settings","ForceUpdate",false);
   InfoSuccess = Ini->ReadBool("Settings","InfoSuccess",true);
   InfoFail = Ini->ReadBool("Settings","InfoFail",false);
   AccountsMode = Ini->ReadInteger("Settings","AccountsMode",0);
@@ -616,6 +624,7 @@ extern "C" int __declspec(dllexport) __stdcall Load(PPluginLink Link)
 	  hGravatarForm = new TGravatarForm(Application);
 	}
 	hGravatarForm->Timer->Interval = 3600000 * Interval;
+    ForceUpdate = Ini->ReadBool("Settings","ForceUpdate",false);
 	InfoSuccess = Ini->ReadBool("Settings","InfoSuccess",true);
 	InfoFail = Ini->ReadBool("Settings","InfoFail",false);
 	AccountsMode = Ini->ReadInteger("Settings","AccountsMode",0);
@@ -684,7 +693,7 @@ extern "C" __declspec(dllexport) PPluginInfo __stdcall AQQPluginInfo(DWORD AQQVe
 {
   PluginInfo.cbSize = sizeof(TPluginInfo);
   PluginInfo.ShortName = (wchar_t*)L"Gravatar";
-  PluginInfo.Version = PLUGIN_MAKE_VERSION(1,1,0,0);
+  PluginInfo.Version = PLUGIN_MAKE_VERSION(1,1,2,0);
   PluginInfo.Description = (wchar_t*)L"Aktualizacja awatarów na podstawie danych w serwisie gravatar.com";
   PluginInfo.Author = (wchar_t*)L"Krzysztof Grochocki (Beherit)";
   PluginInfo.AuthorMail = (wchar_t*)L"kontakt@beherit.pl";
