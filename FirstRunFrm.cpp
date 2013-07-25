@@ -2,40 +2,31 @@
 #include <vcl.h>
 #pragma hdrstop
 #include "FirstRunFrm.h"
-#include <inifiles.hpp>
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
-#pragma link "LMDPNGImage"
-#pragma link "sSkinManager"
-#pragma link "sSkinProvider"
-#pragma link "sButton"
-#pragma link "sCheckBox"
-#pragma link "sComboBox"
-#pragma link "sEdit"
-#pragma link "sLabel"
-#pragma link "sPanel"
-#pragma link "sRadioButton"
+#pragma link "acPNG"
 #pragma link "sBevel"
 #pragma link "sButton"
 #pragma link "sCheckBox"
+#pragma link "sCheckListBox"
 #pragma link "sComboBox"
 #pragma link "sEdit"
 #pragma link "sLabel"
+#pragma link "sListBox"
 #pragma link "sPanel"
 #pragma link "sRadioButton"
-#pragma link "sCheckListBox"
-#pragma link "sListBox"
-#pragma link "IdBaseComponent"
-#pragma link "IdThreadComponent"
+#pragma link "sSkinManager"
+#pragma link "sSkinProvider"
 #pragma resource "*.dfm"
 TFirstRunForm *FirstRunForm;
 //---------------------------------------------------------------------------
+__declspec(dllimport)UnicodeString GetPluginUserDir();
 __declspec(dllimport)UnicodeString GetThemeSkinDir();
 __declspec(dllimport)bool ChkSkinEnabled();
-__declspec(dllimport)UnicodeString GetPluginUserDir();
+__declspec(dllimport)bool ChkNativeEnabled();
 __declspec(dllimport)void GetAccountList(bool FirstRun);
 __declspec(dllimport)void RefreshAvatars();
-__declspec(dllimport)void RefreshSettings();
+__declspec(dllimport)void LoadSettings(bool OnLoad);
 //---------------------------------------------------------------------------
 __fastcall TFirstRunForm::TFirstRunForm(TComponent* Owner)
 	: TForm(Owner)
@@ -45,11 +36,12 @@ __fastcall TFirstRunForm::TFirstRunForm(TComponent* Owner)
 
 void __fastcall TFirstRunForm::FormShow(TObject *Sender)
 {
-  //AplhaSkins
+  //Skorkowanie okna
   if(!ChkSkinEnabled())
   {
 	UnicodeString ThemeSkinDir = GetThemeSkinDir();
-	if(FileExists(ThemeSkinDir + "\\\\Skin.asz"))
+	//Wlaczenie skorkowania
+	if((FileExists(ThemeSkinDir + "\\\\Skin.asz"))&&(!ChkNativeEnabled()))
 	{
 	  ThemeSkinDir = StringReplace(ThemeSkinDir, "\\\\", "\\", TReplaceFlags() << rfReplaceAll);
 	  sSkinManager->SkinDirectory = ThemeSkinDir;
@@ -57,6 +49,7 @@ void __fastcall TFirstRunForm::FormShow(TObject *Sender)
 	  sSkinProvider->DrawNonClientArea = false;
 	  sSkinManager->Active = true;
 	}
+	//Wylaczenie skorkowania
 	else
 	 sSkinManager->Active = false;
   }
@@ -67,11 +60,12 @@ void __fastcall TFirstRunForm::FormShow(TObject *Sender)
 
 void __fastcall TFirstRunForm::FormCreate(TObject *Sender)
 {
-  //AlphaSkins
+  ///Skorkowanie okna
   if(ChkSkinEnabled())
   {
 	UnicodeString ThemeSkinDir = GetThemeSkinDir();
-	if(FileExists(ThemeSkinDir + "\\\\Skin.asz"))
+	//Wlaczenie skorkowania
+	if((FileExists(ThemeSkinDir + "\\\\Skin.asz"))&&(!ChkNativeEnabled()))
 	{
 	  ThemeSkinDir = StringReplace(ThemeSkinDir, "\\\\", "\\", TReplaceFlags() << rfReplaceAll);
 	  sSkinManager->SkinDirectory = ThemeSkinDir;
@@ -79,53 +73,48 @@ void __fastcall TFirstRunForm::FormCreate(TObject *Sender)
 	  sSkinProvider->DrawNonClientArea = true;
 	  sSkinManager->Active = true;
 	}
+	//Wylaczenie skorkowania
 	else
 	 sSkinManager->Active = false;
   }
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TFirstRunForm::SaveButtonClick(TObject *Sender)
-{
-  aSaveSettings->Execute();
-  RefreshSettings();
-  Close();
-  RefreshAvatars();
-}
-//---------------------------------------------------------------------------
-
 void __fastcall TFirstRunForm::aSaveSettingsExecute(TObject *Sender)
 {
   TIniFile *Ini = new TIniFile(GetPluginUserDir() + "\\\\Gravatar\\\\Settings.ini");
-  if(GetMode0RadioButton->Checked)
-   Ini->WriteInteger("Settings","GetMode",0);
-  else if(GetMode1RadioButton->Checked)
-   Ini->WriteInteger("Settings","GetMode",1);
-  if(EmailEdit->Text=="Wpisz tutaj adres e-mail") EmailEdit->Text = "";
-  Ini->WriteString("Settings","StaticEmail",EmailEdit->Text);
+  //Domyslny awatar
   if(DefaultAvatarRadioButton0->Checked)
    Ini->WriteInteger("Settings","DefaultAvatar",0);
   else if(DefaultAvatarRadioButton1->Checked)
    Ini->WriteInteger("Settings","DefaultAvatar",1);
   else if(DefaultAvatarRadioButton2->Checked)
    Ini->WriteInteger("Settings","DefaultAvatar",2);
-  else if(DefaultAvatarRadioButton3->Checked)
+  else
    Ini->WriteInteger("Settings","DefaultAvatar",3);
+  //Sposob pobierania adresu e-mail
+  Ini->WriteBool("Settings","GetMode",!GetMode0RadioButton->Checked);
+  //Ustalony przez usera adres e-mail
+  if(EmailEdit->Text=="Wpisz tutaj adres e-mail") EmailEdit->Text = "";
+  Ini->WriteString("Settings","StaticEmail",EmailEdit->Text);
+   //Czestotliwosc sprawdzania aktualizacji
   Ini->WriteInteger("Settings","Interval",IntervalComboBox->ItemIndex);
+  //Wymuszanie aktualizacji
   Ini->WriteBool("Settings","ForceUpdate",ForceUpdateCheckBox->Checked);
+  //Informacja o pomyslnym zaktualizowaniu awatarow
   Ini->WriteBool("Settings","InfoSuccess",InfoSuccessCheckBox->Checked);
+  //Informacja o bledzie podczas aktualizacji awatarow
   Ini->WriteBool("Settings","InfoFail",InfoFailCheckBox->Checked);
-  if(AccountsMode0RadioButton->Checked)
-   Ini->WriteInteger("Settings","AccountsMode",0);
-  else if(AccountsMode1RadioButton->Checked)
-   Ini->WriteInteger("Settings","AccountsMode",1);
-  UnicodeString Accounts;
+  //Tryb obslugi kont
+  Ini->WriteBool("Settings","AccountsMode",!AccountsMode0RadioButton->Checked);
+  //Lista obslugiwanych kont
+  UnicodeString pAccounts;
   for(int Count=0;Count<AccountsCheckListBox->Items->Count;Count++)
   {
 	if(AccountsCheckListBox->Checked[Count])
-	 Accounts = Accounts + AccountsCheckListBox->Items->Strings[Count] + ";";
+	 pAccounts = pAccounts + AccountsCheckListBox->Items->Strings[Count] + ";";
   }
-  Ini->WriteString("Settings","Accounts",Accounts);
+  Ini->WriteString("Settings","Accounts",pAccounts);
   delete Ini;
 }
 //---------------------------------------------------------------------------
@@ -306,3 +295,15 @@ void __fastcall TFirstRunForm::ForceUpdateCheckBoxClick(TObject *Sender)
 }
 //---------------------------------------------------------------------------
 
+void __fastcall TFirstRunForm::SaveButtonClick(TObject *Sender)
+{
+  //Zapisanie ustawien
+  aSaveSettings->Execute();
+  //Odczyt ustawien w rdzeniu wtyczki
+  LoadSettings(false);
+  //Zamkniecie formy
+  Close();
+  //Odswiezanie awatarow
+  RefreshAvatars();
+}
+//---------------------------------------------------------------------------

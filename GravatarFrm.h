@@ -2,24 +2,14 @@
 #ifndef GravatarFrmH
 #define GravatarFrmH
 //---------------------------------------------------------------------------
-#include <Classes.hpp>
-#include <Controls.hpp>
-#include <StdCtrls.hpp>
-#include <Forms.hpp>
+#include "acPNG.hpp"
+#include "IdAntiFreeze.hpp"
+#include "IdAntiFreezeBase.hpp"
 #include "IdBaseComponent.hpp"
 #include "IdComponent.hpp"
 #include "IdHTTP.hpp"
 #include "IdTCPClient.hpp"
 #include "IdTCPConnection.hpp"
-#include "LMDPNGImage.hpp"
-#include <ComCtrls.hpp>
-#include <ExtCtrls.hpp>
-#include <jpeg.hpp>
-#include <ActnList.hpp>
-#include <pngimage.hpp>
-#include <CheckLst.hpp>
-#include "sSkinManager.hpp"
-#include "sSkinProvider.hpp"
 #include "sBevel.hpp"
 #include "sButton.hpp"
 #include "sCheckBox.hpp"
@@ -30,12 +20,15 @@
 #include "sListBox.hpp"
 #include "sPageControl.hpp"
 #include "sRadioButton.hpp"
-#include "IdThreadComponent.hpp"
-#include "IdCoder.hpp"
-#include "IdCoder3to4.hpp"
-#include "IdCoderMIME.hpp"
-#include "IdAntiFreeze.hpp"
-#include "IdAntiFreezeBase.hpp"
+#include "sSkinManager.hpp"
+#include "sSkinProvider.hpp"
+#include <ActnList.hpp>
+#include <Classes.hpp>
+#include <ComCtrls.hpp>
+#include <Controls.hpp>
+#include <ExtCtrls.hpp>
+#include <jpeg.hpp>
+#include <StdCtrls.hpp>
 //---------------------------------------------------------------------------
 class TGravatarForm : public TForm
 {
@@ -45,7 +38,7 @@ __published:	// IDE-managed Components
 	TsTabSheet *DefaultAvatarTabSheet;
 	TsButton *SaveButton;
 	TsBevel *Bevel;
-	TActionList *ActionList1;
+	TActionList *ActionList;
 	TAction *aExit;
 	TAction *aLoadSettings;
 	TAction *aSaveSettings;
