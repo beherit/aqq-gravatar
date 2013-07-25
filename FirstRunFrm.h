@@ -12,65 +12,81 @@
 #include "LMDPNGImage.hpp"
 #include <CheckLst.hpp>
 #include <pngimage.hpp>
+#include "sSkinManager.hpp"
+#include "sSkinProvider.hpp"
+#include "sBevel.hpp"
+#include "sButton.hpp"
+#include "sCheckBox.hpp"
+#include "sComboBox.hpp"
+#include "sEdit.hpp"
+#include "sLabel.hpp"
+#include "sPanel.hpp"
+#include "sRadioButton.hpp"
+#include "sCheckListBox.hpp"
+#include "sListBox.hpp"
+#include "IdBaseComponent.hpp"
+#include "IdThreadComponent.hpp"
 //---------------------------------------------------------------------------
 class TFirstRunForm : public TForm
 {
 __published:	// IDE-managed Components
-	TBevel *Bevel;
-	TPanel *Panel1;
-	TButton *NextButton;
-	TButton *PrevButton;
-	TButton *SaveButton;
-	TActionList *ActionList1;
+	TsBevel *Bevel;
+	TsPanel *Panel1;
+	TsButton *NextButton;
+	TsButton *PrevButton;
+	TsButton *SaveButton;
+	TActionList *ActionList;
 	TAction *aSaveSettings;
-	TLabel *WelcomeLabel1;
+	TsLabel *WelcomeLabel1;
 	TImage *GravatarImage;
-	TLabel *WelcomeLabel2;
-	TLabel *WelcomeLabel3;
-	TPanel *Panel2;
-	TLabel *GetModeLabel;
-	TRadioButton *GetMode0RadioButton;
-	TRadioButton *GetMode1RadioButton;
-	TEdit *EmailEdit;
-	TPanel *Panel3;
-	TLabel *DefaultAvatarLabel;
-	TRadioButton *DefaultAvatarRadioButton0;
+	TsLabel *WelcomeLabel2;
+	TsLabel *WelcomeLabel3;
+	TsPanel *Panel2;
+	TsLabel *GetModeLabel;
+	TsRadioButton *GetMode0RadioButton;
+	TsRadioButton *GetMode1RadioButton;
+	TsEdit *EmailEdit;
+	TsPanel *Panel3;
+	TsLabel *DefaultAvatarLabel;
+	TsRadioButton *DefaultAvatarRadioButton0;
 	TImage *DefaultAvatarImage0;
-	TRadioButton *DefaultAvatarRadioButton1;
+	TsRadioButton *DefaultAvatarRadioButton1;
 	TImage *DefaultAvatarImage1;
-	TRadioButton *DefaultAvatarRadioButton2;
+	TsRadioButton *DefaultAvatarRadioButton2;
 	TImage *DefaultAvatarImage2;
 	TImage *DefaultAvatarImage3;
-	TRadioButton *DefaultAvatarRadioButton3;
-	TPanel *Panel4;
-	TLabel *IntervalLabel;
-	TComboBox *IntervalComboBox;
-	TCheckBox *InfoSuccessCheckBox;
-	TPanel *Panel5;
-	TBevel *DefaultAvatarBevel0;
-	TBevel *DefaultAvatarBevel2;
-	TBevel *DefaultAvatarBevel3;
-	TBevel *DefaultAvatarBevel1;
-	TLabel *InfoLabel;
-	TCheckBox *InfoFailCheckBox;
-	TLabel *AccountsLabel;
-	TRadioButton *AccountsMode0RadioButton;
-	TRadioButton *AccountsMode1RadioButton;
-	TCheckListBox *AccountsCheckListBox;
-	TPanel *Panel6;
-	TLabel *EndLabel1;
-	TLabel *EndLabel2;
+	TsRadioButton *DefaultAvatarRadioButton3;
+	TsPanel *Panel4;
+	TsLabel *IntervalLabel;
+	TsComboBox *IntervalComboBox;
+	TsCheckBox *InfoSuccessCheckBox;
+	TsPanel *Panel5;
+	TsBevel *DefaultAvatarBevel0;
+	TsBevel *DefaultAvatarBevel2;
+	TsBevel *DefaultAvatarBevel3;
+	TsBevel *DefaultAvatarBevel1;
+	TsLabel *InfoLabel;
+	TsCheckBox *InfoFailCheckBox;
+	TsLabel *AccountsLabel;
+	TsRadioButton *AccountsMode0RadioButton;
+	TsRadioButton *AccountsMode1RadioButton;
+	TsCheckListBox *AccountsCheckListBox;
+	TsPanel *Panel6;
+	TsLabel *EndLabel1;
+	TsLabel *EndLabel2;
 	TImage *GravatarImage2;
-	TLabel *EndLabel3;
+	TsLabel *EndLabel3;
+	TsSkinManager *sSkinManager;
+	TsSkinProvider *sSkinProvider;
+	TAction *aNextButton;
+	TAction *aPrevButton;
+	TAction *aDefaultAvatar0;
+	TAction *aDefaultAvatar1;
+	TAction *aDefaultAvatar2;
+	TAction *aDefaultAvatar3;
 	void __fastcall SaveButtonClick(TObject *Sender);
-	void __fastcall NextButtonClick(TObject *Sender);
-	void __fastcall PrevButtonClick(TObject *Sender);
 	void __fastcall GetMode1RadioButtonClick(TObject *Sender);
 	void __fastcall GetMode0RadioButtonClick(TObject *Sender);
-	void __fastcall DefaultAvatarRadioButton0Click(TObject *Sender);
-	void __fastcall DefaultAvatarRadioButton1Click(TObject *Sender);
-	void __fastcall DefaultAvatarRadioButton2Click(TObject *Sender);
-	void __fastcall DefaultAvatarRadioButton3Click(TObject *Sender);
 	void __fastcall DefaultAvatarImage0Click(TObject *Sender);
 	void __fastcall DefaultAvatarImage1Click(TObject *Sender);
 	void __fastcall DefaultAvatarImage2Click(TObject *Sender);
@@ -79,6 +95,13 @@ __published:	// IDE-managed Components
 	void __fastcall AccountsMode1RadioButtonClick(TObject *Sender);
 	void __fastcall AccountsMode0RadioButtonClick(TObject *Sender);
 	void __fastcall aSaveSettingsExecute(TObject *Sender);
+	void __fastcall FormCreate(TObject *Sender);
+	void __fastcall aNextButtonExecute(TObject *Sender);
+	void __fastcall aPrevButtonExecute(TObject *Sender);
+	void __fastcall aDefaultAvatar0Execute(TObject *Sender);
+	void __fastcall aDefaultAvatar1Execute(TObject *Sender);
+	void __fastcall aDefaultAvatar2Execute(TObject *Sender);
+	void __fastcall aDefaultAvatar3Execute(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
 	__fastcall TFirstRunForm(TComponent* Owner);
