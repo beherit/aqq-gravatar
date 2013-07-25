@@ -23,7 +23,8 @@ TFirstRunForm *FirstRunForm;
 __declspec(dllimport)UnicodeString GetPluginUserDir();
 __declspec(dllimport)UnicodeString GetThemeSkinDir();
 __declspec(dllimport)bool ChkSkinEnabled();
-__declspec(dllimport)bool ChkNativeEnabled();
+__declspec(dllimport)bool ChkThemeAnimateWindows();
+__declspec(dllimport)bool ChkThemeGlowing();
 __declspec(dllimport)void GetAccountList(bool FirstRun);
 __declspec(dllimport)void RefreshAvatars();
 __declspec(dllimport)void LoadSettings(bool OnLoad);
@@ -34,49 +35,42 @@ __fastcall TFirstRunForm::TFirstRunForm(TComponent* Owner)
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TFirstRunForm::FormShow(TObject *Sender)
+void __fastcall TFirstRunForm::WMTransparency(TMessage &Message)
 {
-  //Skorkowanie okna
-  if(!ChkSkinEnabled())
-  {
-	UnicodeString ThemeSkinDir = GetThemeSkinDir();
-	//Wlaczenie skorkowania
-	if((FileExists(ThemeSkinDir + "\\\\Skin.asz"))&&(!ChkNativeEnabled()))
-	{
-	  ThemeSkinDir = StringReplace(ThemeSkinDir, "\\\\", "\\", TReplaceFlags() << rfReplaceAll);
-	  sSkinManager->SkinDirectory = ThemeSkinDir;
-	  sSkinManager->SkinName = "Skin.asz";
-	  sSkinProvider->DrawNonClientArea = false;
-	  sSkinManager->Active = true;
-	}
-	//Wylaczenie skorkowania
-	else
-	 sSkinManager->Active = false;
-  }
-  //Pobieranie listy kont
-  GetAccountList(true);
+  Application->ProcessMessages();
+  sSkinProvider->BorderForm->UpdateExBordersPos(true,(int)Message.LParam);
 }
 //---------------------------------------------------------------------------
 
 void __fastcall TFirstRunForm::FormCreate(TObject *Sender)
 {
-  ///Skorkowanie okna
+  //Wlaczona zaawansowana stylizacja okien
   if(ChkSkinEnabled())
   {
 	UnicodeString ThemeSkinDir = GetThemeSkinDir();
-	//Wlaczenie skorkowania
-	if((FileExists(ThemeSkinDir + "\\\\Skin.asz"))&&(!ChkNativeEnabled()))
+	//Plik zaawansowanej stylizacji okien istnieje
+	if(FileExists(ThemeSkinDir + "\\\\Skin.asz"))
 	{
 	  ThemeSkinDir = StringReplace(ThemeSkinDir, "\\\\", "\\", TReplaceFlags() << rfReplaceAll);
 	  sSkinManager->SkinDirectory = ThemeSkinDir;
 	  sSkinManager->SkinName = "Skin.asz";
-	  sSkinProvider->DrawNonClientArea = true;
+	  if(ChkThemeAnimateWindows()) sSkinManager->AnimEffects->FormShow->Time = 200;
+	  else sSkinManager->AnimEffects->FormShow->Time = 0;
+	  sSkinManager->Effects->AllowGlowing = ChkThemeGlowing();
 	  sSkinManager->Active = true;
 	}
-	//Wylaczenie skorkowania
-	else
-	 sSkinManager->Active = false;
+	//Brak pliku zaawansowanej stylizacji okien
+	else sSkinManager->Active = false;
   }
+  //Zaawansowana stylizacja okien wylaczona
+  else sSkinManager->Active = false;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TFirstRunForm::FormShow(TObject *Sender)
+{
+  //Pobieranie listy kont
+  GetAccountList(true);
 }
 //---------------------------------------------------------------------------
 

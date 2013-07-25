@@ -1,1 +1,1 @@
-PLUGIN_RES RCDATA "Data\\Gravatar.dll.png"
+SHARED DATA "Data\\Gravatar.dll.png"

@@ -24,7 +24,8 @@ TGravatarForm *GravatarForm;
 __declspec(dllimport)UnicodeString GetPluginUserDir();
 __declspec(dllimport)UnicodeString GetThemeSkinDir();
 __declspec(dllimport)bool ChkSkinEnabled();
-__declspec(dllimport)bool ChkNativeEnabled();
+__declspec(dllimport)bool ChkThemeAnimateWindows();
+__declspec(dllimport)bool ChkThemeGlowing();
 __declspec(dllimport)void GetAccountList(bool FirstRun);
 __declspec(dllimport)void RefreshAvatars();
 __declspec(dllimport)void LoadSettings(bool OnLoad);
@@ -37,25 +38,40 @@ __fastcall TGravatarForm::TGravatarForm(TComponent* Owner)
 }
 //---------------------------------------------------------------------------
 
-void __fastcall TGravatarForm::FormShow(TObject *Sender)
+void __fastcall TGravatarForm::WMTransparency(TMessage &Message)
 {
-  //Skorkowanie okna
-  if(!ChkSkinEnabled())
+  Application->ProcessMessages();
+  sSkinProvider->BorderForm->UpdateExBordersPos(true,(int)Message.LParam);
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TGravatarForm::FormCreate(TObject *Sender)
+{
+  //Wlaczona zaawansowana stylizacja okien
+  if(ChkSkinEnabled())
   {
 	UnicodeString ThemeSkinDir = GetThemeSkinDir();
-	//Wlaczenie skorkowania
-	if((FileExists(ThemeSkinDir + "\\\\Skin.asz"))&&(!ChkNativeEnabled()))
+	//Plik zaawansowanej stylizacji okien istnieje
+	if(FileExists(ThemeSkinDir + "\\\\Skin.asz"))
 	{
 	  ThemeSkinDir = StringReplace(ThemeSkinDir, "\\\\", "\\", TReplaceFlags() << rfReplaceAll);
 	  sSkinManager->SkinDirectory = ThemeSkinDir;
 	  sSkinManager->SkinName = "Skin.asz";
-	  sSkinProvider->DrawNonClientArea = false;
+	  if(ChkThemeAnimateWindows()) sSkinManager->AnimEffects->FormShow->Time = 200;
+	  else sSkinManager->AnimEffects->FormShow->Time = 0;
+	  sSkinManager->Effects->AllowGlowing = ChkThemeGlowing();
 	  sSkinManager->Active = true;
 	}
-	//Wylaczenie skorkowania
-	else
-	 sSkinManager->Active = false;
+	//Brak pliku zaawansowanej stylizacji okien
+	else sSkinManager->Active = false;
   }
+  //Zaawansowana stylizacja okien wylaczona
+  else sSkinManager->Active = false;
+}
+//---------------------------------------------------------------------------
+
+void __fastcall TGravatarForm::FormShow(TObject *Sender)
+{
   //Odczyt ustawien
   aLoadSettings->Execute();
   //Wylaczenie buttona
@@ -64,28 +80,6 @@ void __fastcall TGravatarForm::FormShow(TObject *Sender)
   PageControl->ActivePageIndex = 0;
   //Zmienna sprawdzania dokonania zmian
   SettingsChanged = false;
-}
-//---------------------------------------------------------------------------
-
-void __fastcall TGravatarForm::FormCreate(TObject *Sender)
-{
-  ///Skorkowanie okna
-  if(ChkSkinEnabled())
-  {
-	UnicodeString ThemeSkinDir = GetThemeSkinDir();
-	//Wlaczenie skorkowania
-	if((FileExists(ThemeSkinDir + "\\\\Skin.asz"))&&(!ChkNativeEnabled()))
-	{
-	  ThemeSkinDir = StringReplace(ThemeSkinDir, "\\\\", "\\", TReplaceFlags() << rfReplaceAll);
-	  sSkinManager->SkinDirectory = ThemeSkinDir;
-	  sSkinManager->SkinName = "Skin.asz";
-	  sSkinProvider->DrawNonClientArea = true;
-	  sSkinManager->Active = true;
-	}
-	//Wylaczenie skorkowania
-	else
-	 sSkinManager->Active = false;
-  }
 }
 //---------------------------------------------------------------------------
 
