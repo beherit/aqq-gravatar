@@ -1,3 +1,24 @@
+//---------------------------------------------------------------------------
+// Copyright (C) 2010-2013 Krzysztof Grochocki
+//
+// This file is part of Gravatar
+//
+// Gravatar is free software; you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation; either version 3, or (at your option)
+// any later version.
+//
+// Gravatar is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with GNU Radio; see the file COPYING. If not, write to
+// the Free Software Foundation, Inc., 51 Franklin Street,
+// Boston, MA 02110-1301, USA.
+//---------------------------------------------------------------------------
+
 #include <vcl.h>
 #include <windows.h>
 #pragma hdrstop
@@ -34,6 +55,7 @@ bool InfoFail;
 bool AccountsMode;
 UnicodeString Accounts;
 //FORWARD-AQQ-HOOKS----------------------------------------------------------
+int __stdcall OnColorChange(WPARAM wParam, LPARAM lParam);
 int __stdcall OnModulesLoaded(WPARAM wParam, LPARAM lParam);
 int __stdcall OnThemeChanged(WPARAM wParam, LPARAM lParam);
 //---------------------------------------------------------------------------
@@ -89,6 +111,18 @@ bool ChkThemeGlowing()
   UnicodeString GlowingEnabled = Settings->ReadString("Theme","ThemeGlowing","1");
   delete Settings;
   return StrToBool(GlowingEnabled);
+}
+//---------------------------------------------------------------------------
+
+//Pobieranie ustawien koloru AlphaControls
+int GetHUE()
+{
+  return (int)PluginLink.CallService(AQQ_SYSTEM_COLORGETHUE,0,0);
+}
+//---------------------------------------------------------------------------
+int GetSaturation()
+{
+  return (int)PluginLink.CallService(AQQ_SYSTEM_COLORGETSATURATION,0,0);
 }
 //---------------------------------------------------------------------------
 
@@ -184,6 +218,34 @@ UnicodeString MD5File(UnicodeString FileName)
 }
 //---------------------------------------------------------------------------
 
+//Hook na zmiane kolorystyki AlphaControls
+int __stdcall OnColorChange(WPARAM wParam, LPARAM lParam)
+{
+  //Okno ustawien zostalo juz stworzone
+  if(hGravatarForm)
+  {
+	//Wlaczona zaawansowana stylizacja okien
+	if(ChkSkinEnabled())
+	{
+	  hGravatarForm->sSkinManager->HueOffset = wParam;
+	  hGravatarForm->sSkinManager->Saturation = lParam;
+	}
+  }
+  //Okno pierwszego uruchomienia wtyczki ustawien zostalo juz stworzone
+  if(hFirstRun)
+  {
+	//Wlaczona zaawansowana stylizacja okien
+	if(ChkSkinEnabled())
+	{
+	  hFirstRun->sSkinManager->HueOffset = wParam;
+	  hFirstRun->sSkinManager->Saturation = lParam;
+	}
+  }
+
+  return 0;
+}
+//---------------------------------------------------------------------------
+
 //Hook na zaladowanie wszystkich modulow w AQQ
 int __stdcall OnModulesLoaded (WPARAM wParam, LPARAM lParam)
 {
@@ -230,12 +292,18 @@ int __stdcall OnThemeChanged (WPARAM wParam, LPARAM lParam)
 	  //Plik zaawansowanej stylizacji okien istnieje
 	  if(FileExists(ThemeSkinDir + "\\\\Skin.asz"))
 	  {
+		//Dane pliku zaawansowanej stylizacji okien
 		ThemeSkinDir = StringReplace(ThemeSkinDir, "\\\\", "\\", TReplaceFlags() << rfReplaceAll);
 		hGravatarForm->sSkinManager->SkinDirectory = ThemeSkinDir;
 		hGravatarForm->sSkinManager->SkinName = "Skin.asz";
+		//Ustawianie animacji AlphaControls
 		if(ChkThemeAnimateWindows()) hGravatarForm->sSkinManager->AnimEffects->FormShow->Time = 200;
 		else hGravatarForm->sSkinManager->AnimEffects->FormShow->Time = 0;
 		hGravatarForm->sSkinManager->Effects->AllowGlowing = ChkThemeGlowing();
+		//Zmiana kolorystyki AlphaControls
+		hGravatarForm->sSkinManager->HueOffset = GetHUE();
+		hGravatarForm->sSkinManager->Saturation = GetSaturation();
+		//Aktywacja skorkowania AlphaControls
 		hGravatarForm->sSkinManager->Active = true;
 	  }
 	  //Brak pliku zaawansowanej stylizacji okien
@@ -255,12 +323,18 @@ int __stdcall OnThemeChanged (WPARAM wParam, LPARAM lParam)
 	  //Plik zaawansowanej stylizacji okien istnieje
 	  if(FileExists(ThemeSkinDir + "\\\\Skin.asz"))
 	  {
+		//Dane pliku zaawansowanej stylizacji okien
 		ThemeSkinDir = StringReplace(ThemeSkinDir, "\\\\", "\\", TReplaceFlags() << rfReplaceAll);
 		hFirstRun->sSkinManager->SkinDirectory = ThemeSkinDir;
 		hFirstRun->sSkinManager->SkinName = "Skin.asz";
+		//Ustawianie animacji AlphaControls
 		if(ChkThemeAnimateWindows()) hFirstRun->sSkinManager->AnimEffects->FormShow->Time = 200;
 		else hFirstRun->sSkinManager->AnimEffects->FormShow->Time = 0;
 		hFirstRun->sSkinManager->Effects->AllowGlowing = ChkThemeGlowing();
+		//Zmiana kolorystyki AlphaControls
+		hFirstRun->sSkinManager->HueOffset = GetHUE();
+		hFirstRun->sSkinManager->Saturation = GetSaturation();
+		//Aktywacja skorkowania AlphaControls
 		hFirstRun->sSkinManager->Active = true;
 	  }
 	  //Brak pliku zaawansowanej stylizacji okien
@@ -665,6 +739,8 @@ extern "C" int __declspec(dllexport) __stdcall Load(PPluginLink Link)
   if(FileExists(SettingsFileDir))
    //Odczyt ustawien w rdzeniu wtyczki
    LoadSettings(true);
+  //Hook na zmiane kolorystyki AlphaControls
+  PluginLink.HookEvent(AQQ_SYSTEM_COLORCHANGE,OnColorChange);
   //Hook na zmianê kompozycji
   PluginLink.HookEvent(AQQ_SYSTEM_THEMECHANGED,OnThemeChanged);
   //Hook na zaladowanie wszystkich modulow w AQQ
@@ -723,6 +799,7 @@ extern "C" int __declspec(dllexport) __stdcall Unload()
   //Anty "Abnormal program termination"
   hGravatarForm->IdHTTP->Disconnect();
   //Wyladowanie wszystkich hookow
+  PluginLink.UnhookEvent(OnColorChange);
   PluginLink.UnhookEvent(OnModulesLoaded);
   PluginLink.UnhookEvent(OnThemeChanged);
 
@@ -735,7 +812,7 @@ extern "C" __declspec(dllexport) PPluginInfo __stdcall AQQPluginInfo(DWORD AQQVe
 {
   PluginInfo.cbSize = sizeof(TPluginInfo);
   PluginInfo.ShortName = L"Gravatar";
-  PluginInfo.Version = PLUGIN_MAKE_VERSION(1,3,0,0);
+  PluginInfo.Version = PLUGIN_MAKE_VERSION(1,3,1,0);
   PluginInfo.Description = L"Wtyczka pilnuje, aby we wszystkich sieciach by³ ustawiony zawsze aktualny awatar okreœlony w serwisie gravatar.com.";
   PluginInfo.Author = L"Krzysztof Grochocki (Beherit)";
   PluginInfo.AuthorMail = L"kontakt@beherit.pl";
