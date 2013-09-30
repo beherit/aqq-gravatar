@@ -12,7 +12,7 @@ Autorem wtyczki Gravatar jest Krzysztof Grochocki. Możesz skontaktować się z 
 
 Licencja
 -------
-Wtyczka Gravatar wykorzystuje licencję [GNU General Public License 3](http://www.gnu.org/copyleft/gpl.html).
+Wtyczka Gravatar objęta jest licencją [GNU General Public License 3](http://www.gnu.org/copyleft/gpl.html).
 
     Gravatar
     Copyright (C) 2010-2013  Krzysztof Grochocki
