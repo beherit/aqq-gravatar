@@ -122,6 +122,7 @@ __published:	// IDE-managed Components
 	void __fastcall aDefaultAvatar2Execute(TObject *Sender);
 	void __fastcall aDefaultAvatar3Execute(TObject *Sender);
 	void __fastcall ForceUpdateCheckBoxClick(TObject *Sender);
+	void __fastcall sSkinManagerSysDlgInit(TacSysDlgData DlgData, bool &AllowSkinning);
 private:	// User declarations
 public:		// User declarations
 	__fastcall TFirstRunForm(TComponent* Owner);

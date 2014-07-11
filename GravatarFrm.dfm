@@ -680,10 +680,6 @@ object GravatarForm: TGravatarForm
       Caption = 'Domy'#347'lny awatar'
       SkinData.CustomColor = False
       SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object DefaultAvatarBevel0: TsBevel
         Left = 183
         Top = 49
@@ -1144,7 +1140,7 @@ object GravatarForm: TGravatarForm
         TabOrder = 0
         TabStop = True
         OnClick = aDefaultAvatar0Execute
-        SkinData.SkinSection = 'RADIOBUTTON'
+        SkinData.SkinSection = 'TRANSPARENT'
       end
       object DefaultAvatarRadioButton1: TsRadioButton
         Left = 21
@@ -1154,7 +1150,7 @@ object GravatarForm: TGravatarForm
         Caption = 'Identicon (generowany)'
         TabOrder = 1
         OnClick = aDefaultAvatar1Execute
-        SkinData.SkinSection = 'RADIOBUTTON'
+        SkinData.SkinSection = 'TRANSPARENT'
       end
       object DefaultAvatarRadioButton2: TsRadioButton
         Left = 21
@@ -1164,7 +1160,7 @@ object GravatarForm: TGravatarForm
         Caption = 'Wavatar (generowany)'
         TabOrder = 2
         OnClick = aDefaultAvatar2Execute
-        SkinData.SkinSection = 'RADIOBUTTON'
+        SkinData.SkinSection = 'TRANSPARENT'
       end
       object DefaultAvatarRadioButton3: TsRadioButton
         Left = 21
@@ -1174,7 +1170,7 @@ object GravatarForm: TGravatarForm
         Caption = 'MonsterID (generowany)'
         TabOrder = 3
         OnClick = aDefaultAvatar3Execute
-        SkinData.SkinSection = 'RADIOBUTTON'
+        SkinData.SkinSection = 'TRANSPARENT'
       end
     end
     object EmailTabSheet: TsTabSheet
@@ -1227,7 +1223,7 @@ object GravatarForm: TGravatarForm
         TabOrder = 0
         TabStop = True
         OnClick = GetMode0RadioButtonClick
-        SkinData.SkinSection = 'RADIOBUTTON'
+        SkinData.SkinSection = 'TRANSPARENT'
       end
       object GetMode1RadioButton: TsRadioButton
         Left = 14
@@ -1237,7 +1233,7 @@ object GravatarForm: TGravatarForm
         Caption = 'Ustalony adres e-mail dla wszystkich kont'
         TabOrder = 1
         OnClick = GetMode1RadioButtonClick
-        SkinData.SkinSection = 'RADIOBUTTON'
+        SkinData.SkinSection = 'TRANSPARENT'
       end
     end
     object UpdateTabSheet: TsTabSheet
@@ -1245,10 +1241,6 @@ object GravatarForm: TGravatarForm
       ImageIndex = 2
       SkinData.CustomColor = False
       SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object InfoLabel: TsLabel
         Left = 6
         Top = 70
@@ -1315,6 +1307,7 @@ object GravatarForm: TGravatarForm
         BoundLabel.MaxWidth = 0
         BoundLabel.UseSkinColor = True
         SkinData.SkinSection = 'COMBOBOX'
+        VerticalAlignment = taAlignTop
         Style = csDropDownList
         ItemIndex = 0
         TabOrder = 0
@@ -1346,10 +1339,6 @@ object GravatarForm: TGravatarForm
       ImageIndex = 3
       SkinData.CustomColor = False
       SkinData.CustomFont = False
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object AccountsLabel: TsLabel
         Left = 6
         Top = 6
@@ -1391,7 +1380,7 @@ object GravatarForm: TGravatarForm
         TabOrder = 0
         TabStop = True
         OnClick = AccountsMode0RadioButtonClick
-        SkinData.SkinSection = 'RADIOBUTTON'
+        SkinData.SkinSection = 'TRANSPARENT'
       end
       object AccountsMode1RadioButton: TsRadioButton
         Left = 14
@@ -1401,7 +1390,7 @@ object GravatarForm: TGravatarForm
         Caption = 'Ustawiaj awatar tylko na wybranych kontach:'
         TabOrder = 1
         OnClick = AccountsMode1RadioButtonClick
-        SkinData.SkinSection = 'RADIOBUTTON'
+        SkinData.SkinSection = 'TRANSPARENT'
       end
     end
   end
@@ -1507,6 +1496,7 @@ object GravatarForm: TGravatarForm
   end
   object sSkinManager: TsSkinManager
     ExtendedBorders = True
+    IsDefault = False
     Active = False
     InternalSkins = <>
     MenuSupport.IcoLineSkin = 'ICOLINE'
@@ -1515,7 +1505,7 @@ object GravatarForm: TGravatarForm
     MenuSupport.ExtraLineFont.Height = -11
     MenuSupport.ExtraLineFont.Name = 'Tahoma'
     MenuSupport.ExtraLineFont.Style = []
-    SkinDirectory = 'c:\Skins'
+    Options.OptimizingPriority = opMemory
     SkinInfo = 'N/A'
     ThirdParty.ThirdEdits = ' '
     ThirdParty.ThirdButtons = 'TsButton'
@@ -1538,6 +1528,9 @@ object GravatarForm: TGravatarForm
     ThirdParty.ThirdScrollControl = ' '
     ThirdParty.ThirdUpDown = ' '
     ThirdParty.ThirdScrollBar = ' '
+    ThirdParty.ThirdStaticText = ' '
+    ThirdParty.ThirdNativePaint = ' '
+    OnSysDlgInit = sSkinManagerSysDlgInit
     Left = 248
     Top = 184
   end

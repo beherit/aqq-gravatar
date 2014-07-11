@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------------
-// Copyright (C) 2010-2013 Krzysztof Grochocki
+// Copyright (C) 2010-2014 Krzysztof Grochocki
 //
 // This file is part of Gravatar
 //
@@ -437,3 +437,10 @@ void __fastcall TGravatarForm::aAllowApplyExecute(TObject *Sender)
   SettingsChanged = true;
 }
 //---------------------------------------------------------------------------
+
+void __fastcall TGravatarForm::sSkinManagerSysDlgInit(TacSysDlgData DlgData, bool &AllowSkinning)
+{
+  AllowSkinning = false;
+}
+//---------------------------------------------------------------------------
+
