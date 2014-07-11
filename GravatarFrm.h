@@ -131,6 +131,7 @@ __published:	// IDE-managed Components
 	void __fastcall OKButtonClick(TObject *Sender);
 	void __fastcall aAllowApplyExecute(TObject *Sender);
 	void __fastcall ForceUpdateCheckBoxClick(TObject *Sender);
+	void __fastcall sSkinManagerSysDlgInit(TacSysDlgData DlgData, bool &AllowSkinning);
 private:	// User declarations
 	void __fastcall DeleteFiles(UnicodeString DirName, UnicodeString Prefix);
 public:		// User declarations

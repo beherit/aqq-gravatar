@@ -825,7 +825,7 @@ object FirstRunForm: TFirstRunForm
       TabOrder = 0
       TabStop = True
       OnClick = AccountsMode0RadioButtonClick
-      SkinData.SkinSection = 'RADIOBUTTON'
+      SkinData.SkinSection = 'TRANSPARENT'
     end
     object AccountsMode1RadioButton: TsRadioButton
       Left = 16
@@ -835,7 +835,7 @@ object FirstRunForm: TFirstRunForm
       Caption = 'Ustawiaj awatar tylko na wybranych kontach'
       TabOrder = 1
       OnClick = AccountsMode1RadioButtonClick
-      SkinData.SkinSection = 'RADIOBUTTON'
+      SkinData.SkinSection = 'TRANSPARENT'
     end
     object AccountsCheckListBox: TsCheckListBox
       Left = 32
@@ -903,6 +903,7 @@ object FirstRunForm: TFirstRunForm
       BoundLabel.MaxWidth = 0
       BoundLabel.UseSkinColor = True
       SkinData.SkinSection = 'COMBOBOX'
+      VerticalAlignment = taAlignTop
       Style = csDropDownList
       ItemIndex = 0
       TabOrder = 0
@@ -1423,7 +1424,7 @@ object FirstRunForm: TFirstRunForm
       TabOrder = 0
       TabStop = True
       OnClick = aDefaultAvatar0Execute
-      SkinData.SkinSection = 'RADIOBUTTON'
+      SkinData.SkinSection = 'TRANSPARENT'
     end
     object DefaultAvatarRadioButton1: TsRadioButton
       Left = 21
@@ -1433,7 +1434,7 @@ object FirstRunForm: TFirstRunForm
       Caption = 'Identicon (generowany)'
       TabOrder = 1
       OnClick = aDefaultAvatar1Execute
-      SkinData.SkinSection = 'RADIOBUTTON'
+      SkinData.SkinSection = 'TRANSPARENT'
     end
     object DefaultAvatarRadioButton2: TsRadioButton
       Left = 21
@@ -1443,7 +1444,7 @@ object FirstRunForm: TFirstRunForm
       Caption = 'Wavatar (generowany)'
       TabOrder = 2
       OnClick = aDefaultAvatar2Execute
-      SkinData.SkinSection = 'RADIOBUTTON'
+      SkinData.SkinSection = 'TRANSPARENT'
     end
     object DefaultAvatarRadioButton3: TsRadioButton
       Left = 21
@@ -1453,7 +1454,7 @@ object FirstRunForm: TFirstRunForm
       Caption = 'MonsterID (generowany)'
       TabOrder = 3
       OnClick = aDefaultAvatar3Execute
-      SkinData.SkinSection = 'RADIOBUTTON'
+      SkinData.SkinSection = 'TRANSPARENT'
     end
   end
   object Panel2: TsPanel
@@ -1486,7 +1487,7 @@ object FirstRunForm: TFirstRunForm
       TabOrder = 0
       TabStop = True
       OnClick = GetMode0RadioButtonClick
-      SkinData.SkinSection = 'RADIOBUTTON'
+      SkinData.SkinSection = 'TRANSPARENT'
     end
     object GetMode1RadioButton: TsRadioButton
       Left = 16
@@ -1496,7 +1497,7 @@ object FirstRunForm: TFirstRunForm
       Caption = 'Ustalony adres e-mail dla wszystkich kont'
       TabOrder = 1
       OnClick = GetMode1RadioButtonClick
-      SkinData.SkinSection = 'RADIOBUTTON'
+      SkinData.SkinSection = 'TRANSPARENT'
     end
     object EmailEdit: TsEdit
       Left = 32
@@ -1731,7 +1732,6 @@ object FirstRunForm: TFirstRunForm
   end
   object sSkinManager: TsSkinManager
     ExtendedBorders = True
-    IsDefault = False
     Active = False
     InternalSkins = <>
     MenuSupport.IcoLineSkin = 'ICOLINE'
@@ -1740,7 +1740,7 @@ object FirstRunForm: TFirstRunForm
     MenuSupport.ExtraLineFont.Height = -11
     MenuSupport.ExtraLineFont.Name = 'Tahoma'
     MenuSupport.ExtraLineFont.Style = []
-    SkinDirectory = 'c:\Skins'
+    Options.OptimizingPriority = opMemory
     SkinInfo = 'N/A'
     ThirdParty.ThirdEdits = ' '
     ThirdParty.ThirdButtons = 'TsButton'
@@ -1763,6 +1763,9 @@ object FirstRunForm: TFirstRunForm
     ThirdParty.ThirdScrollControl = ' '
     ThirdParty.ThirdUpDown = ' '
     ThirdParty.ThirdScrollBar = ' '
+    ThirdParty.ThirdStaticText = ' '
+    ThirdParty.ThirdNativePaint = ' '
+    OnSysDlgInit = sSkinManagerSysDlgInit
     Left = 64
     Top = 144
   end

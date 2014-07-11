@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------------
-// Copyright (C) 2010-2013 Krzysztof Grochocki
+// Copyright (C) 2010-2014 Krzysztof Grochocki
 //
 // This file is part of Gravatar
 //
@@ -55,9 +55,9 @@ bool InfoFail;
 bool AccountsMode;
 UnicodeString Accounts;
 //FORWARD-AQQ-HOOKS----------------------------------------------------------
-int __stdcall OnColorChange(WPARAM wParam, LPARAM lParam);
-int __stdcall OnModulesLoaded(WPARAM wParam, LPARAM lParam);
-int __stdcall OnThemeChanged(WPARAM wParam, LPARAM lParam);
+INT_PTR __stdcall OnColorChange(WPARAM wParam, LPARAM lParam);
+INT_PTR __stdcall OnModulesLoaded(WPARAM wParam, LPARAM lParam);
+INT_PTR __stdcall OnThemeChanged(WPARAM wParam, LPARAM lParam);
 //---------------------------------------------------------------------------
 
 //Pobieranie sciezki do skorki kompozycji
@@ -219,7 +219,7 @@ UnicodeString MD5File(UnicodeString FileName)
 //---------------------------------------------------------------------------
 
 //Hook na zmiane kolorystyki AlphaControls
-int __stdcall OnColorChange(WPARAM wParam, LPARAM lParam)
+INT_PTR __stdcall OnColorChange(WPARAM wParam, LPARAM lParam)
 {
   //Okno ustawien zostalo juz stworzone
   if(hGravatarForm)
@@ -247,7 +247,7 @@ int __stdcall OnColorChange(WPARAM wParam, LPARAM lParam)
 //---------------------------------------------------------------------------
 
 //Hook na zaladowanie wszystkich modulow w AQQ
-int __stdcall OnModulesLoaded (WPARAM wParam, LPARAM lParam)
+INT_PTR __stdcall OnModulesLoaded (WPARAM wParam, LPARAM lParam)
 {
   //Jezeli nie skonfigurowano jeszcze wtyczki
   if(!FileExists(SettingsFileDir))
@@ -279,7 +279,7 @@ int __stdcall OnModulesLoaded (WPARAM wParam, LPARAM lParam)
 //---------------------------------------------------------------------------
 
 //Hook na zmianê kompozycji
-int __stdcall OnThemeChanged (WPARAM wParam, LPARAM lParam)
+INT_PTR __stdcall OnThemeChanged (WPARAM wParam, LPARAM lParam)
 {
   //Okno ustawien zostalo juz stworzone
   if(hGravatarForm)
@@ -716,7 +716,7 @@ void ExtractRes(wchar_t* FileName, wchar_t* ResName, wchar_t* ResType)
 }
 //---------------------------------------------------------------------------
 
-extern "C" int __declspec(dllexport) __stdcall Load(PPluginLink Link)
+extern "C" INT_PTR __declspec(dllexport) __stdcall Load(PPluginLink Link)
 {
   //Linkowanie wtyczki z komunikatorem
   PluginLink = *Link;
@@ -779,7 +779,7 @@ extern "C" int __declspec(dllexport) __stdcall Load(PPluginLink Link)
 //---------------------------------------------------------------------------
 
 //Ustawienia wtyczki
-extern "C" int __declspec(dllexport)__stdcall Settings()
+extern "C" INT_PTR __declspec(dllexport)__stdcall Settings()
 {
   //Przypisanie uchwytu do okna ustawien
   if(!hGravatarForm)
@@ -794,7 +794,7 @@ extern "C" int __declspec(dllexport)__stdcall Settings()
 }
 //---------------------------------------------------------------------------
 
-extern "C" int __declspec(dllexport) __stdcall Unload()
+extern "C" INT_PTR __declspec(dllexport) __stdcall Unload()
 {
   //Anty "Abnormal program termination"
   hGravatarForm->IdHTTP->Disconnect();
@@ -812,11 +812,11 @@ extern "C" __declspec(dllexport) PPluginInfo __stdcall AQQPluginInfo(DWORD AQQVe
 {
   PluginInfo.cbSize = sizeof(TPluginInfo);
   PluginInfo.ShortName = L"Gravatar";
-  PluginInfo.Version = PLUGIN_MAKE_VERSION(1,3,1,0);
+  PluginInfo.Version = PLUGIN_MAKE_VERSION(1,4,0,0);
   PluginInfo.Description = L"Wtyczka pilnuje, aby we wszystkich sieciach by³ ustawiony zawsze aktualny awatar okreœlony w serwisie gravatar.com.";
-  PluginInfo.Author = L"Krzysztof Grochocki (Beherit)";
+  PluginInfo.Author = L"Krzysztof Grochocki";
   PluginInfo.AuthorMail = L"kontakt@beherit.pl";
-  PluginInfo.Copyright = L"Krzysztof Grochocki (Beherit)";
+  PluginInfo.Copyright = L"Krzysztof Grochocki";
   PluginInfo.Homepage = L"http://beherit.pl";
 
   return &PluginInfo;

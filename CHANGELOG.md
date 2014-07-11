@@ -1,30 +1,37 @@
+1.4.0.0
+-----
+* Kompilacja pod poprawionymi nag≈Ç√≥wkami dla wersji 64-bitowej.
+* Zmniejszenie rozmiaru wtyczki 64-bitowej poprzez u≈ºycie kompresji LZMA.
+* Niesk√≥rkowanie systemowych okien dialogowych niepochodzƒÖcych z wtyczki.
+* Aktualizacja komponent√≥w AlphaControls do nowszej wersji (9.10).
+
 1.3.1.0
 -----
-* Obs≥uga kolorystyki stylizacji okien (barwa i nasycenie).
-* Drobna poprawka w obs≥udze nadawania przeüroczystoúci obramowaÒ przez wtyczkÍ AlphaWindows.
-* Aktualizacja komponentÛw AlphaControls do nowszej wersji (8.44).
+* Obs≈Çuga kolorystyki stylizacji okien (barwa i nasycenie).
+* Drobna poprawka w obs≈Çudze nadawania prze≈∫roczysto≈õci obramowa≈Ñ przez wtyczkƒô AlphaWindows.
+* Aktualizacja komponent√≥w AlphaControls do nowszej wersji (8.44).
 
 1.3.0.0
 -----
 * Dodanie 64-bitowej wersji wtyczki.
-* Wsparcie dla wtyczki AlphaWindows (ustawianie przeüroczystoúci obramowania).
-* Drobne zmiany w skÛrkowaniu form ustawieÒ.
-* Zmiana sposobu wypakowywania plikÛw z zasobÛw wtyczki.
-* Zmniejszenie rozmiaru wtyczki 32-bitowej poprzez uøycie kompresji LZMA.
-* Aktualizacja komponentÛw AlphaControls do nowszej wersji (8.20).
+* Wsparcie dla wtyczki AlphaWindows (ustawianie prze≈∫roczysto≈õci obramowania).
+* Drobne zmiany w sk√≥rkowaniu form ustawie≈Ñ.
+* Zmiana sposobu wypakowywania plik√≥w z zasob√≥w wtyczki.
+* Zmniejszenie rozmiaru wtyczki 32-bitowej poprzez u≈ºycie kompresji LZMA.
+* Aktualizacja komponent√≥w AlphaControls do nowszej wersji (8.20).
 
 1.2.0.0
 -----
 * Przepisanie wtyczki pod kompilator Embarcadero C++ Builder XE3.
-* Aktualizacja komponentÛw AlphaControls do najnowszej dostÍpnej wersji (7.70).
-* Inne mniej waøne zmiany w kodzie.
+* Aktualizacja komponent√≥w AlphaControls do najnowszej dostƒôpnej wersji (7.70).
+* Inne mniej wa≈ºne zmiany w kodzie.
 
 1.1.3.0
 -----
-* Wtyczka posiada w≥asnπ ikonÍ pokazywanπ w ustawieniach komunikatora na liúcie wtyczek.
+* Wtyczka posiada w≈ÇasnƒÖ ikonƒô pokazywanƒÖ w ustawieniach komunikatora na li≈õcie wtyczek.
 * Przy aktualizacji awatara we wtyczce SkypeCore pokazywany jest tylko identyfikator Skype.
-* Atualizacja komponentÛw AlphaControls do najnowszej dostÍpnej wersji (7.65).
-* Obs≥uga natywnego stylu Windows (wy≥πczone skÛrkowanie okien wtyczki).
+* Atualizacja komponent√≥w AlphaControls do najnowszej dostƒôpnej wersji (7.65).
+* Obs≈Çuga natywnego stylu Windows (wy≈ÇƒÖczone sk√≥rkowanie okien wtyczki).
 * Optymalizacja kodu.
 
 1.1.2.0
@@ -34,12 +41,12 @@
 
 1.1.0.0
 -----
-* Pe≥ne skÛrkowanie wszystkich okien wtyczki.
-* Aktualizowanie awatarÛw we wtyczce GG Network.
+* Pe≈Çne sk√≥rkowanie wszystkich okien wtyczki.
+* Aktualizowanie awatar√≥w we wtyczce GG Network.
 * Komunikat z potwierdzeniem dokonania aktualizacji po zmianach w ustawieniach wtyczki.
 * Poprawki kosmetyczne formy pierwszego uruchomienia wtyczki.
-* Zmniejszono czas wyúwietlania chmurek informacyjnych.
-* Zmiana sposobu pobierania awatarÛw oraz rozszerzenie informowania o niepomyúlnej aktualizacji.
+* Zmniejszono czas wy≈õwietlania chmurek informacyjnych.
+* Zmiana sposobu pobierania awatar√≥w oraz rozszerzenie informowania o niepomy≈õlnej aktualizacji.
 * Spora optymalizacja kodu.
 
 1.0.0.0
