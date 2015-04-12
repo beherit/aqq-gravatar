@@ -59,7 +59,7 @@ __fastcall TFirstRunForm::TFirstRunForm(TComponent* Owner)
 void __fastcall TFirstRunForm::WMTransparency(TMessage &Message)
 {
 	Application->ProcessMessages();
-	sSkinProvider->BorderForm->UpdateExBordersPos(true,(int)Message.LParam);
+	sSkinProvider->BorderForm->UpdateExBordersPos(true, (int)Message.LParam);
 }
 //---------------------------------------------------------------------------
 
@@ -106,28 +106,28 @@ void __fastcall TFirstRunForm::aSaveSettingsExecute(TObject *Sender)
 	TIniFile *Ini = new TIniFile(GetPluginUserDir() + "\\\\Gravatar\\\\Settings.ini");
 	//Domyslny awatar
 	if(DefaultAvatarRadioButton0->Checked)
-		Ini->WriteInteger("Settings","DefaultAvatar",0);
+		Ini->WriteInteger("Settings", "DefaultAvatar", 0);
 	else if(DefaultAvatarRadioButton1->Checked)
-		Ini->WriteInteger("Settings","DefaultAvatar",1);
+		Ini->WriteInteger("Settings", "DefaultAvatar", 1);
 	else if(DefaultAvatarRadioButton2->Checked)
-		Ini->WriteInteger("Settings","DefaultAvatar",2);
+		Ini->WriteInteger("Settings", "DefaultAvatar", 2);
 	else
-		Ini->WriteInteger("Settings","DefaultAvatar",3);
+		Ini->WriteInteger("Settings", "DefaultAvatar", 3);
 	//Sposob pobierania adresu e-mail
-	Ini->WriteBool("Settings","GetMode",!GetMode0RadioButton->Checked);
+	Ini->WriteBool("Settings", "GetMode", !GetMode0RadioButton->Checked);
 	//Ustalony przez usera adres e-mail
 	if(EmailEdit->Text=="Wpisz tutaj adres e-mail") EmailEdit->Text = "";
-	Ini->WriteString("Settings","StaticEmail",EmailEdit->Text);
+	Ini->WriteString("Settings", "StaticEmail", EmailEdit->Text);
 	//Czestotliwosc sprawdzania aktualizacji
-	Ini->WriteInteger("Settings","Interval",IntervalComboBox->ItemIndex);
+	Ini->WriteInteger("Settings", "Interval", IntervalComboBox->ItemIndex);
 	//Wymuszanie aktualizacji
-	Ini->WriteBool("Settings","ForceUpdate",ForceUpdateCheckBox->Checked);
+	Ini->WriteBool("Settings", "ForceUpdate", ForceUpdateCheckBox->Checked);
 	//Informacja o pomyslnym zaktualizowaniu awatarow
-	Ini->WriteBool("Settings","InfoSuccess",InfoSuccessCheckBox->Checked);
+	Ini->WriteBool("Settings", "InfoSuccess", InfoSuccessCheckBox->Checked);
 	//Informacja o bledzie podczas aktualizacji awatarow
-	Ini->WriteBool("Settings","InfoFail",InfoFailCheckBox->Checked);
+	Ini->WriteBool("Settings", "InfoFail", InfoFailCheckBox->Checked);
 	//Tryb obslugi kont
-	Ini->WriteBool("Settings","AccountsMode",!AccountsMode0RadioButton->Checked);
+	Ini->WriteBool("Settings", "AccountsMode", !AccountsMode0RadioButton->Checked);
 	//Lista obslugiwanych kont
 	UnicodeString pAccounts;
 	for(int Count=0;Count<AccountsCheckListBox->Items->Count;Count++)
@@ -135,7 +135,7 @@ void __fastcall TFirstRunForm::aSaveSettingsExecute(TObject *Sender)
 		if(AccountsCheckListBox->Checked[Count])
 			pAccounts = pAccounts + AccountsCheckListBox->Items->Strings[Count] + ";";
 	}
-	Ini->WriteString("Settings","Accounts",pAccounts);
+	Ini->WriteString("Settings", "Accounts", pAccounts);
 	delete Ini;
 }
 //---------------------------------------------------------------------------
