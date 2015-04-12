@@ -122,6 +122,11 @@ int GetSaturation()
 	return (int)PluginLink.CallService(AQQ_SYSTEM_COLORGETSATURATION, 0, 0);
 }
 //---------------------------------------------------------------------------
+int GetBrightness()
+{
+	return (int)PluginLink.CallService(AQQ_SYSTEM_COLORGETBRIGHTNESS, 0, 0);
+}
+//---------------------------------------------------------------------------
 
 //Ustalanie typu pliku graficznego (zmienne)
 struct TMagicWordInfo
@@ -223,8 +228,10 @@ INT_PTR __stdcall OnColorChange(WPARAM wParam, LPARAM lParam)
 		//Wlaczona zaawansowana stylizacja okien
 		if(ChkSkinEnabled())
 		{
-			hGravatarForm->sSkinManager->HueOffset = wParam;
-			hGravatarForm->sSkinManager->Saturation = lParam;
+			TPluginColorChange ColorChange = *(PPluginColorChange)wParam;
+			hGravatarForm->sSkinManager->HueOffset = ColorChange.Hue;
+			hGravatarForm->sSkinManager->Saturation = ColorChange.Saturation;
+			hGravatarForm->sSkinManager->Brightness = ColorChange.Brightness;
 		}
 	}
 	//Okno pierwszego uruchomienia wtyczki ustawien zostalo juz stworzone
@@ -233,8 +240,10 @@ INT_PTR __stdcall OnColorChange(WPARAM wParam, LPARAM lParam)
 		//Wlaczona zaawansowana stylizacja okien
 		if(ChkSkinEnabled())
 		{
-			hFirstRun->sSkinManager->HueOffset = wParam;
-			hFirstRun->sSkinManager->Saturation = lParam;
+			TPluginColorChange ColorChange = *(PPluginColorChange)wParam;
+			hFirstRun->sSkinManager->HueOffset = ColorChange.Hue;
+			hFirstRun->sSkinManager->Saturation = ColorChange.Saturation;
+			hFirstRun->sSkinManager->Brightness = ColorChange.Brightness;
 		}
 	}
 
@@ -299,6 +308,7 @@ INT_PTR __stdcall OnThemeChanged (WPARAM wParam, LPARAM lParam)
 				//Zmiana kolorystyki AlphaControls
 				hGravatarForm->sSkinManager->HueOffset = GetHUE();
 				hGravatarForm->sSkinManager->Saturation = GetSaturation();
+				hGravatarForm->sSkinManager->Brightness = GetBrightness();
 				//Aktywacja skorkowania AlphaControls
 				hGravatarForm->sSkinManager->Active = true;
 			}
@@ -330,6 +340,7 @@ INT_PTR __stdcall OnThemeChanged (WPARAM wParam, LPARAM lParam)
 				//Zmiana kolorystyki AlphaControls
 				hFirstRun->sSkinManager->HueOffset = GetHUE();
 				hFirstRun->sSkinManager->Saturation = GetSaturation();
+				hFirstRun->sSkinManager->Brightness = GetBrightness();
 				//Aktywacja skorkowania AlphaControls
 				hFirstRun->sSkinManager->Active = true;
 			}
@@ -736,7 +747,7 @@ extern "C" INT_PTR __declspec(dllexport) __stdcall Load(PPluginLink Link)
 		//Odczyt ustawien w rdzeniu wtyczki
 		LoadSettings(true);
 	//Hook na zmiane kolorystyki AlphaControls
-	PluginLink.HookEvent(AQQ_SYSTEM_COLORCHANGE, OnColorChange);
+	PluginLink.HookEvent(AQQ_SYSTEM_COLORCHANGEV2, OnColorChange);
 	//Hook na zmianê kompozycji
 	PluginLink.HookEvent(AQQ_SYSTEM_THEMECHANGED, OnThemeChanged);
 	//Hook na zaladowanie wszystkich modulow w AQQ

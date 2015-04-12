@@ -48,8 +48,9 @@ __declspec(dllimport)UnicodeString GetThemeSkinDir();
 __declspec(dllimport)bool ChkSkinEnabled();
 __declspec(dllimport)bool ChkThemeAnimateWindows();
 __declspec(dllimport)bool ChkThemeGlowing();
-__declspec(dllimport)int GetSaturation();
 __declspec(dllimport)int GetHUE();
+__declspec(dllimport)int GetSaturation();
+__declspec(dllimport)int GetBrightness();
 __declspec(dllimport)void GetAccountList(bool FirstRun);
 __declspec(dllimport)void RefreshAvatars();
 __declspec(dllimport)void LoadSettings(bool OnLoad);
@@ -89,6 +90,7 @@ void __fastcall TGravatarForm::FormCreate(TObject *Sender)
 			//Zmiana kolorystyki AlphaControls
 			sSkinManager->HueOffset = GetHUE();
 			sSkinManager->Saturation = GetSaturation();
+			sSkinManager->Brightness = GetBrightness();
 			//Aktywacja skorkowania AlphaControls
 			sSkinManager->Active = true;
 		}
