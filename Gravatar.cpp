@@ -26,7 +26,6 @@
 #include <PluginAPI.h>
 #include "fstream.h"
 #include <IdHashMessageDigest.hpp>
-#include <boost\scoped_ptr.hpp>
 
 int WINAPI DllEntryPoint(HINSTANCE hinst, unsigned long reason, void* lpReserved)
 {
@@ -178,8 +177,10 @@ int GetFileType(wchar_t* wcPath)
 //Kodowanie lancuchow znakow do MD5
 UnicodeString MD5(const UnicodeString Text)
 {
-	boost::scoped_ptr<TIdHashMessageDigest5> idmd5(new TIdHashMessageDigest5());
-	return idmd5->HashStringAsHex(Text.LowerCase().Trim()).LowerCase();
+	TIdHashMessageDigest5 *idmd5= new TIdHashMessageDigest5();
+	UnicodeString Result = idmd5->HashStringAsHex(Text.LowerCase().Trim()).LowerCase();
+	delete idmd5;
+	return Result;
 }
 //---------------------------------------------------------------------------
 
