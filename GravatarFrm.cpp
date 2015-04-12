@@ -65,7 +65,7 @@ __fastcall TGravatarForm::TGravatarForm(TComponent* Owner)
 void __fastcall TGravatarForm::WMTransparency(TMessage &Message)
 {
 	Application->ProcessMessages();
-	if(sSkinManager->Active) sSkinProvider->BorderForm->UpdateExBordersPos(true,(int)Message.LParam);
+	if(sSkinManager->Active) sSkinProvider->BorderForm->UpdateExBordersPos(true, (int)Message.LParam);
 }
 //---------------------------------------------------------------------------
 
@@ -188,7 +188,7 @@ void __fastcall TGravatarForm::aLoadSettingsExecute(TObject *Sender)
 	//Odczyt ustawien
 	TIniFile *Ini = new TIniFile(GetPluginUserDir() + "\\\\Gravatar\\\\Settings.ini");
 	//Domyslny awatar
-	switch(Ini->ReadInteger("Settings","DefaultAvatar",0))
+	switch(Ini->ReadInteger("Settings", "DefaultAvatar", 0))
 	{
 		case 1:
 			DefaultAvatarRadioButton1->Checked = true;
@@ -220,7 +220,7 @@ void __fastcall TGravatarForm::aLoadSettingsExecute(TObject *Sender)
 			break;
 	}
 	//Sposob pobierania adresu e-mail
-	if(!Ini->ReadBool("Settings","GetMode",false))
+	if(!Ini->ReadBool("Settings", "GetMode", false))
 	{
 		GetMode0RadioButton->Checked = true;
 		if(EmailEdit->Text.IsEmpty()) EmailEdit->Text = "Wpisz tutaj adres e-mail";
@@ -233,22 +233,22 @@ void __fastcall TGravatarForm::aLoadSettingsExecute(TObject *Sender)
 		EmailEdit->Enabled = true;
 	}
 	//Ustalony przez usera adres e-mail
-	EmailEdit->Text = Ini->ReadString("Settings","StaticEmail","");
+	EmailEdit->Text = Ini->ReadString("Settings", "StaticEmail", "");
 	//Czestotliwosc sprawdzania aktualizacji
-	IntervalComboBox->ItemIndex = Ini->ReadInteger("Settings","Interval",0);
+	IntervalComboBox->ItemIndex = Ini->ReadInteger("Settings", "Interval", 0);
 	//Wymuszanie aktualizacji
-	ForceUpdateCheckBox->Checked = Ini->ReadBool("Settings","ForceUpdate",false);
+	ForceUpdateCheckBox->Checked = Ini->ReadBool("Settings", "ForceUpdate", false);
 	InfoSuccessCheckBox->Enabled = !ForceUpdateCheckBox->Checked;
 	InfoFailCheckBox->Enabled = !ForceUpdateCheckBox->Checked;
 	//Informacja o pomyslnym zaktualizowaniu awatarow
-	InfoSuccessCheckBox->Checked = Ini->ReadBool("Settings","InfoSuccess",true);
+	InfoSuccessCheckBox->Checked = Ini->ReadBool("Settings", "InfoSuccess", true);
 	//Informacja o bledzie podczas aktualizacji awatarow
-	InfoFailCheckBox->Checked = Ini->ReadBool("Settings","InfoFail",false);
+	InfoFailCheckBox->Checked = Ini->ReadBool("Settings", "InfoFail", false);
 	//Tryb obslugi kont
-	if(!Ini->ReadBool("Settings","AccountsMode",false)) AccountsMode0RadioButton->Checked = true;
+	if(!Ini->ReadBool("Settings", "AccountsMode", false)) AccountsMode0RadioButton->Checked = true;
 	else AccountsMode1RadioButton->Checked = true;
 	//Lista obslugiwanych kont
-	UnicodeString pAccounts = Ini->ReadString("Settings","Accounts","");
+	UnicodeString pAccounts = Ini->ReadString("Settings", "Accounts", "");
 	for(int pCount=0;pCount<AccountsCheckListBox->Items->Count;pCount++)
 	{
 		if(pAccounts.Pos(AccountsCheckListBox->Items->Strings[pCount]))
@@ -264,28 +264,28 @@ void __fastcall TGravatarForm::aSaveSettingsExecute(TObject *Sender)
 	TIniFile *Ini = new TIniFile(GetPluginUserDir() + "\\\\Gravatar\\\\Settings.ini");
 	//Domyslny awatar
 	if(DefaultAvatarRadioButton0->Checked)
-		Ini->WriteInteger("Settings","DefaultAvatar",0);
+		Ini->WriteInteger("Settings", "DefaultAvatar", 0);
 	else if(DefaultAvatarRadioButton1->Checked)
-		Ini->WriteInteger("Settings","DefaultAvatar",1);
+		Ini->WriteInteger("Settings", "DefaultAvatar", 1);
 	else if(DefaultAvatarRadioButton2->Checked)
-		Ini->WriteInteger("Settings","DefaultAvatar",2);
+		Ini->WriteInteger("Settings", "DefaultAvatar", 2);
 	else
-		Ini->WriteInteger("Settings","DefaultAvatar",3);
+		Ini->WriteInteger("Settings", "DefaultAvatar", 3);
 	//Sposob pobierania adresu e-mail
-	Ini->WriteBool("Settings","GetMode",!GetMode0RadioButton->Checked);
+	Ini->WriteBool("Settings", "GetMode", !GetMode0RadioButton->Checked);
 	//Ustalony przez usera adres e-mail
 	if(EmailEdit->Text=="Wpisz tutaj adres e-mail") EmailEdit->Text = "";
-	Ini->WriteString("Settings","StaticEmail",EmailEdit->Text);
+	Ini->WriteString("Settings", "StaticEmail", EmailEdit->Text);
 	//Czestotliwosc sprawdzania aktualizacji
-	Ini->WriteInteger("Settings","Interval",IntervalComboBox->ItemIndex);
+	Ini->WriteInteger("Settings", "Interval", IntervalComboBox->ItemIndex);
 	//Wymuszanie aktualizacji
-	Ini->WriteBool("Settings","ForceUpdate",ForceUpdateCheckBox->Checked);
+	Ini->WriteBool("Settings", "ForceUpdate", ForceUpdateCheckBox->Checked);
 	//Informacja o pomyslnym zaktualizowaniu awatarow
-	Ini->WriteBool("Settings","InfoSuccess",InfoSuccessCheckBox->Checked);
+	Ini->WriteBool("Settings", "InfoSuccess", InfoSuccessCheckBox->Checked);
 	//Informacja o bledzie podczas aktualizacji awatarow
-	Ini->WriteBool("Settings","InfoFail",InfoFailCheckBox->Checked);
+	Ini->WriteBool("Settings", "InfoFail", InfoFailCheckBox->Checked);
 	//Tryb obslugi kont
-	Ini->WriteBool("Settings","AccountsMode",!AccountsMode0RadioButton->Checked);
+	Ini->WriteBool("Settings", "AccountsMode", !AccountsMode0RadioButton->Checked);
 	//Lista obslugiwanych kont
 	UnicodeString pAccounts;
 	for(int Count=0;Count<AccountsCheckListBox->Items->Count;Count++)
@@ -293,7 +293,7 @@ void __fastcall TGravatarForm::aSaveSettingsExecute(TObject *Sender)
 		if(AccountsCheckListBox->Checked[Count])
 			pAccounts = pAccounts + AccountsCheckListBox->Items->Strings[Count] + ";";
 	}
-	Ini->WriteString("Settings","Accounts",pAccounts);
+	Ini->WriteString("Settings", "Accounts", pAccounts);
 	delete Ini;
 }
 //---------------------------------------------------------------------------

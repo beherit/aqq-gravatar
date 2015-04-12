@@ -60,14 +60,14 @@ INT_PTR __stdcall OnThemeChanged(WPARAM wParam, LPARAM lParam);
 //Pobieranie sciezki do skorki kompozycji
 UnicodeString GetThemeSkinDir()
 {
-	return StringReplace((wchar_t*)PluginLink.CallService(AQQ_FUNCTION_GETTHEMEDIR,0,0), "\\", "\\\\", TReplaceFlags() << rfReplaceAll) + "\\\\Skin";
+	return StringReplace((wchar_t*)PluginLink.CallService(AQQ_FUNCTION_GETTHEMEDIR, 0, 0), "\\", "\\\\", TReplaceFlags() << rfReplaceAll) + "\\\\Skin";
 }
 //---------------------------------------------------------------------------
 
 //Pobieranie sciezki katalogu prywatnego wtyczek
 UnicodeString GetPluginUserDir()
 {
-	return StringReplace((wchar_t*)PluginLink.CallService(AQQ_FUNCTION_GETPLUGINUSERDIR,0,0), "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
+	return StringReplace((wchar_t*)PluginLink.CallService(AQQ_FUNCTION_GETPLUGINUSERDIR, 0, 0), "\\", "\\\\", TReplaceFlags() << rfReplaceAll);
 }
 //---------------------------------------------------------------------------
 
@@ -75,11 +75,11 @@ UnicodeString GetPluginUserDir()
 bool ChkSkinEnabled()
 {
 	TStrings* IniList = new TStringList();
-	IniList->SetText((wchar_t*)PluginLink.CallService(AQQ_FUNCTION_FETCHSETUP,0,0));
+	IniList->SetText((wchar_t*)PluginLink.CallService(AQQ_FUNCTION_FETCHSETUP, 0, 0));
 	TMemIniFile *Settings = new TMemIniFile(ChangeFileExt(Application->ExeName, ".INI"));
 	Settings->SetStrings(IniList);
 	delete IniList;
-	UnicodeString SkinsEnabled = Settings->ReadString("Settings","UseSkin","1");
+	UnicodeString SkinsEnabled = Settings->ReadString("Settings", "UseSkin", "1");
 	delete Settings;
 	return StrToBool(SkinsEnabled);
 }
@@ -89,11 +89,11 @@ bool ChkSkinEnabled()
 bool ChkThemeAnimateWindows()
 {
 	TStrings* IniList = new TStringList();
-	IniList->SetText((wchar_t*)PluginLink.CallService(AQQ_FUNCTION_FETCHSETUP,0,0));
+	IniList->SetText((wchar_t*)PluginLink.CallService(AQQ_FUNCTION_FETCHSETUP, 0, 0));
 	TMemIniFile *Settings = new TMemIniFile(ChangeFileExt(Application->ExeName, ".INI"));
 	Settings->SetStrings(IniList);
 	delete IniList;
-	UnicodeString AnimateWindowsEnabled = Settings->ReadString("Theme","ThemeAnimateWindows","1");
+	UnicodeString AnimateWindowsEnabled = Settings->ReadString("Theme", "ThemeAnimateWindows", "1");
 	delete Settings;
 	return StrToBool(AnimateWindowsEnabled);
 }
@@ -101,11 +101,11 @@ bool ChkThemeAnimateWindows()
 bool ChkThemeGlowing()
 {
 	TStrings* IniList = new TStringList();
-	IniList->SetText((wchar_t*)PluginLink.CallService(AQQ_FUNCTION_FETCHSETUP,0,0));
+	IniList->SetText((wchar_t*)PluginLink.CallService(AQQ_FUNCTION_FETCHSETUP, 0, 0));
 	TMemIniFile *Settings = new TMemIniFile(ChangeFileExt(Application->ExeName, ".INI"));
 	Settings->SetStrings(IniList);
 	delete IniList;
-	UnicodeString GlowingEnabled = Settings->ReadString("Theme","ThemeGlowing","1");
+	UnicodeString GlowingEnabled = Settings->ReadString("Theme", "ThemeGlowing", "1");
 	delete Settings;
 	return StrToBool(GlowingEnabled);
 }
@@ -114,12 +114,12 @@ bool ChkThemeGlowing()
 //Pobieranie ustawien koloru AlphaControls
 int GetHUE()
 {
-	return (int)PluginLink.CallService(AQQ_SYSTEM_COLORGETHUE,0,0);
+	return (int)PluginLink.CallService(AQQ_SYSTEM_COLORGETHUE, 0, 0);
 }
 //---------------------------------------------------------------------------
 int GetSaturation()
 {
-	return (int)PluginLink.CallService(AQQ_SYSTEM_COLORGETSATURATION,0,0);
+	return (int)PluginLink.CallService(AQQ_SYSTEM_COLORGETSATURATION, 0, 0);
 }
 //---------------------------------------------------------------------------
 
@@ -349,16 +349,16 @@ void ShowUpdateMessage(UnicodeString AccountJID)
 {
 	if(!ForceUpdate)
 	{
-		if(AccountJID.Pos("@plugin.gg")) AccountJID = "GG " + AccountJID.Delete(AccountJID.Pos("@plugin.gg"),AccountJID.Length());
-		else if(AccountJID.Pos("@skype.plugin")) AccountJID = "Skype " + AccountJID.Delete(AccountJID.Pos("@skype.plugin"),AccountJID.Length());
+		if(AccountJID.Pos("@plugin.gg")) AccountJID = "GG " + AccountJID.Delete(AccountJID.Pos("@plugin.gg"), AccountJID.Length());
+		else if(AccountJID.Pos("@skype.plugin")) AccountJID = "Skype " + AccountJID.Delete(AccountJID.Pos("@skype.plugin"), AccountJID.Length());
 		//else AccountJID = "Jabber " + AccountJID;
 		TPluginShowInfo PluginShowInfo;
 		PluginShowInfo.cbSize = sizeof(TPluginShowInfo);
 		PluginShowInfo.Event = tmeInfo;
 		PluginShowInfo.Text = ("Zaktualizowano awatar dla konta " + AccountJID).w_str();
-		PluginShowInfo.ImagePath = (wchar_t*)PluginLink.CallService(AQQ_FUNCTION_GETPNG_FILEPATH,19,0);
+		PluginShowInfo.ImagePath = (wchar_t*)PluginLink.CallService(AQQ_FUNCTION_GETPNG_FILEPATH, 19, 0);
 		PluginShowInfo.TimeOut = 1000 * 4;
-		PluginLink.CallService(AQQ_FUNCTION_SHOWINFO,0,(LPARAM)(&PluginShowInfo));
+		PluginLink.CallService(AQQ_FUNCTION_SHOWINFO, 0, (LPARAM)(&PluginShowInfo));
 	}
 }
 //---------------------------------------------------------------------------
@@ -368,16 +368,16 @@ void ShowFailMessage(UnicodeString AccountJID)
 {
 	if(!ForceUpdate)
 	{
-		if(AccountJID.Pos("@plugin.gg")) AccountJID = "GG " + AccountJID.Delete(AccountJID.Pos("@plugin.gg"),AccountJID.Length());
-		else if(AccountJID.Pos("@skype.plugin")) AccountJID = "Skype " + AccountJID.Delete(AccountJID.Pos("@skype.plugin"),AccountJID.Length());
+		if(AccountJID.Pos("@plugin.gg")) AccountJID = "GG " + AccountJID.Delete(AccountJID.Pos("@plugin.gg"), AccountJID.Length());
+		else if(AccountJID.Pos("@skype.plugin")) AccountJID = "Skype " + AccountJID.Delete(AccountJID.Pos("@skype.plugin"), AccountJID.Length());
 		//else AccountJID = "Jabber " + AccountJID;
 		TPluginShowInfo PluginShowInfo;
 		PluginShowInfo.cbSize = sizeof(TPluginShowInfo);
 		PluginShowInfo.Event = tmeInfo;
 		PluginShowInfo.Text = ("Wyst¹pi³ b³¹d podczas aktualizacji awatara dla konta " + AccountJID).w_str();
-		PluginShowInfo.ImagePath = (wchar_t*)PluginLink.CallService(AQQ_FUNCTION_GETPNG_FILEPATH,85,0);
+		PluginShowInfo.ImagePath = (wchar_t*)PluginLink.CallService(AQQ_FUNCTION_GETPNG_FILEPATH, 85, 0);
 		PluginShowInfo.TimeOut = 1000 * 4;
-		PluginLink.CallService(AQQ_FUNCTION_SHOWINFO,0,(LPARAM)(&PluginShowInfo));
+		PluginLink.CallService(AQQ_FUNCTION_SHOWINFO, 0, (LPARAM)(&PluginShowInfo));
 	}
 }
 //---------------------------------------------------------------------------
@@ -440,11 +440,11 @@ void RefreshAvatars()
 		hGravatarForm = new TGravatarForm(Application);
 	}
 	//Pobieranie ilosci kont
-	int UserIdxCount = PluginLink.CallService(AQQ_FUNCTION_GETUSEREXCOUNT,0,0);
+	int UserIdxCount = PluginLink.CallService(AQQ_FUNCTION_GETUSEREXCOUNT, 0, 0);
 	//Sprawdzanie awatarow dla danych kont
 	for(int UserIdx=0;UserIdx<UserIdxCount;UserIdx++)
 	{
-		PluginLink.CallService(AQQ_FUNCTION_GETNETWORKSTATE,(WPARAM)(&PluginStateChange),UserIdx);
+		PluginLink.CallService(AQQ_FUNCTION_GETNETWORKSTATE, (WPARAM)(&PluginStateChange), UserIdx);
 		UnicodeString JID = (wchar_t*)PluginStateChange.JID;
 		//Sposob obslugi kont
 		if((!AccountsMode)||((AccountsMode)&&(Accounts.Pos(JID))))
@@ -454,7 +454,7 @@ void RefreshAvatars()
 			{
 				TPluginContactSimpleInfo PluginContactSimpleInfo;
 				PluginContactSimpleInfo.JID = JID.w_str();
-				PluginLink.CallService(AQQ_CONTACTS_FILLSIMPLEINFO,0,(LPARAM)(&PluginContactSimpleInfo));
+				PluginLink.CallService(AQQ_CONTACTS_FILLSIMPLEINFO, 0, (LPARAM)(&PluginContactSimpleInfo));
 				AvatarFile = (wchar_t*)PluginContactSimpleInfo.Mail;
 				if(AvatarFile.Pos("\n")) AvatarFile.Delete(AvatarFile.Pos("\n"), AvatarFile.Length());
 			}
@@ -486,7 +486,7 @@ void RefreshAvatars()
 						break;
 				}
 				//Pobieranie awatara
-				if(IdHTTPGetFileToMem(MemFile,URL))
+				if(IdHTTPGetFileToMem(MemFile, URL))
 				{
 					MemFile->Position = 0;
 					//Awatar pobrany prawidlowo
@@ -501,22 +501,22 @@ void RefreshAvatars()
 						//Zmiana nazwy pliku w stosunku do jego typu
 						if((FileFormat==0)||(FileFormat==1))
 						{
-							MoveFile((PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".tmp").w_str(),(PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".gif.tmp").w_str());
+							MoveFile((PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".tmp").w_str(), (PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".gif.tmp").w_str());
 							AvatarFile = AvatarFile + ".gif";
 						}
 						else if(FileFormat==2)
 						{
-							MoveFile((PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".tmp").w_str(),(PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".jpg.tmp").w_str());
+							MoveFile((PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".tmp").w_str(), (PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".jpg.tmp").w_str());
 							AvatarFile = AvatarFile + ".jpg";
 						}
 						else if(FileFormat==3)
 						{
-							MoveFile((PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".tmp").w_str(),(PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".png.tmp").w_str());
+							MoveFile((PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".tmp").w_str(), (PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".png.tmp").w_str());
 							AvatarFile = AvatarFile + ".png";
 						}
 						else if(FileFormat==4)
 						{
-							MoveFile((PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".tmp").w_str(),(PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".bmp.tmp").w_str());
+							MoveFile((PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".tmp").w_str(), (PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".bmp.tmp").w_str());
 							AvatarFile = AvatarFile + ".bmp";
 						}
 						//Sprawdzanie MD5 pliku
@@ -526,7 +526,7 @@ void RefreshAvatars()
 							{
 								//Usuniecie starego awatara
 								DeleteFile((PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile));
-								MoveFile((PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".tmp").w_str(),(PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile).w_str());
+								MoveFile((PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile + ".tmp").w_str(), (PluginDir + "\\\\Gravatar\\\\Avatars\\\\" + AvatarFile).w_str());
 								//Aktualizacja awatara na serwerze Jabber
 								if(!PluginStateChange.FromPlugin)
 								{
@@ -542,7 +542,7 @@ void RefreshAvatars()
 									PluginAvatar.SilentMode = true;
 									PluginAvatar.JID = JID.w_str();
 									//Wywolanie aktualizacji
-									int Rtrn = PluginLink.CallService(AQQ_CONTACTS_SET_AVATAR,(WPARAM)&PluginAvatar,(LPARAM)&PluginContact);
+									int Rtrn = PluginLink.CallService(AQQ_CONTACTS_SET_AVATAR, (WPARAM)&PluginAvatar, (LPARAM)&PluginContact);
 									//Aktualizacja przebiegla prawidlowo
 									if(Rtrn)
 									{
@@ -570,7 +570,7 @@ void RefreshAvatars()
 									PluginHook.wParam = (WPARAM)(&PluginAvatar);
 									PluginHook.lParam = 0;
 									//Wywolanie aktualizacji
-									int Rtrn = PluginLink.CallService(AQQ_SYSTEM_SENDHOOK,(WPARAM)(&PluginHook),0);
+									int Rtrn = PluginLink.CallService(AQQ_SYSTEM_SENDHOOK, (WPARAM)(&PluginHook), 0);
 									//Aktualizacja przebiegla prawidlowo
 									if(Rtrn==3)
 									{
@@ -631,11 +631,11 @@ void GetAccountList(bool FirstRun)
 		//Informacje na temat kont uzytkownika
 		TPluginStateChange PluginStateChange;
 		//Pobieranie ilosci kont
-		int UserIdxCount = PluginLink.CallService(AQQ_FUNCTION_GETUSEREXCOUNT,0,0);
+		int UserIdxCount = PluginLink.CallService(AQQ_FUNCTION_GETUSEREXCOUNT, 0, 0);
 		//Pobieranie listy kont
 		for(int UserIdx=0;UserIdx<UserIdxCount;UserIdx++)
 		{
-			PluginLink.CallService(AQQ_FUNCTION_GETNETWORKSTATE,(WPARAM)(&PluginStateChange),UserIdx);
+			PluginLink.CallService(AQQ_FUNCTION_GETNETWORKSTATE, (WPARAM)(&PluginStateChange), UserIdx);
 			hFirstRun->AccountsCheckListBox->Items->Add((wchar_t*)PluginStateChange.JID);
 		}
 	}
@@ -653,11 +653,11 @@ void GetAccountList(bool FirstRun)
 		//Informacje na temat kont uzytkownika
 		TPluginStateChange PluginStateChange;
 		//Pobieranie ilosci kont
-		int UserIdxCount = PluginLink.CallService(AQQ_FUNCTION_GETUSEREXCOUNT,0,0);
+		int UserIdxCount = PluginLink.CallService(AQQ_FUNCTION_GETUSEREXCOUNT, 0, 0);
 		//Pobieranie listy kont
 		for(int UserIdx=0;UserIdx<UserIdxCount;UserIdx++)
 		{
-			PluginLink.CallService(AQQ_FUNCTION_GETNETWORKSTATE,(WPARAM)(&PluginStateChange),UserIdx);
+			PluginLink.CallService(AQQ_FUNCTION_GETNETWORKSTATE, (WPARAM)(&PluginStateChange), UserIdx);
 			hGravatarForm->AccountsCheckListBox->Items->Add((wchar_t*)PluginStateChange.JID);
 		}
 	}
@@ -669,23 +669,23 @@ void LoadSettings(bool OnLoad)
 {
 	TIniFile *Ini = new TIniFile(SettingsFileDir);
 	//Domyslny awatar
-	DefaultAvatar = Ini->ReadInteger("Settings","DefaultAvatar",0);
+	DefaultAvatar = Ini->ReadInteger("Settings", "DefaultAvatar", 0);
 	//Sposob pobierania adresu e-mail
-	GetMode = Ini->ReadBool("Settings","GetMode",false);
+	GetMode = Ini->ReadBool("Settings", "GetMode", false);
 	//Ustalony przez usera adres e-mail
-	StaticEmail = Ini->ReadString("Settings","StaticEmail","");
+	StaticEmail = Ini->ReadString("Settings", "StaticEmail", "");
 	//Czestotliwosc sprawdzania aktualizacji
-	int Interval = Ini->ReadInteger("Settings","Interval",0);
+	int Interval = Ini->ReadInteger("Settings", "Interval", 0);
 	//Wymuszanie aktualizacji
-	ForceUpdate = Ini->ReadBool("Settings","ForceUpdate",false);
+	ForceUpdate = Ini->ReadBool("Settings", "ForceUpdate", false);
 	//Informacja o pomyslnym zaktualizowaniu awatarow
-	InfoSuccess = Ini->ReadBool("Settings","InfoSuccess",true);
+	InfoSuccess = Ini->ReadBool("Settings", "InfoSuccess", true);
 	//Informacja o bledzie podczas aktualizacji awatarow
-	InfoFail = Ini->ReadBool("Settings","InfoFail",false);
+	InfoFail = Ini->ReadBool("Settings", "InfoFail", false);
 	//Tryb obslugi kont
-	AccountsMode = Ini->ReadBool("Settings","AccountsMode",false);
+	AccountsMode = Ini->ReadBool("Settings", "AccountsMode", false);
 	//Lista obslugiwanych kont
-	Accounts = Ini->ReadString("Settings","Accounts","");;
+	Accounts = Ini->ReadString("Settings", "Accounts", "");;
 	delete Ini;
 	//Przypisanie uchwytu do okna ustawien
 	if(!hGravatarForm)
@@ -708,7 +708,7 @@ void ExtractRes(wchar_t* FileName, wchar_t* ResName, wchar_t* ResType)
 	PluginTwoFlagParams.Param1 = ResName;
 	PluginTwoFlagParams.Param2 = ResType;
 	PluginTwoFlagParams.Flag1 = (int)HInstance;
-	PluginLink.CallService(AQQ_FUNCTION_SAVERESOURCE,(WPARAM)&PluginTwoFlagParams,(LPARAM)FileName);
+	PluginLink.CallService(AQQ_FUNCTION_SAVERESOURCE, (WPARAM)&PluginTwoFlagParams, (LPARAM)FileName);
 }
 //---------------------------------------------------------------------------
 
@@ -725,9 +725,9 @@ extern "C" INT_PTR __declspec(dllexport) __stdcall Load(PPluginLink Link)
 	if(!DirectoryExists(PluginUserDir+"\\\\Shared"))
 		CreateDir(PluginUserDir+"\\\\Shared");
 	if(!FileExists(PluginUserDir+"\\\\Shared\\\\Gravatar.dll.png"))
-		ExtractRes((PluginUserDir+"\\\\Shared\\\\Gravatar.dll.png").w_str(),L"SHARED",L"DATA");
+		ExtractRes((PluginUserDir+"\\\\Shared\\\\Gravatar.dll.png").w_str(), L"SHARED", L"DATA");
 	else if(MD5File(PluginUserDir+"\\\\Shared\\\\Gravatar.dll.png")!="FA5BB69CDDDD3D7350FAA9187E438FA0")
-		ExtractRes((PluginUserDir+"\\\\Shared\\\\Gravatar.dll.png").w_str(),L"SHARED",L"DATA");
+		ExtractRes((PluginUserDir+"\\\\Shared\\\\Gravatar.dll.png").w_str(), L"SHARED", L"DATA");
 	//Tworzeniu katalogu z ustawieniami wtyczki
 	if(!DirectoryExists(PluginUserDir+"\\\\Gravatar"))
 		CreateDir(PluginUserDir+"\\\\Gravatar");
@@ -736,13 +736,13 @@ extern "C" INT_PTR __declspec(dllexport) __stdcall Load(PPluginLink Link)
 		//Odczyt ustawien w rdzeniu wtyczki
 		LoadSettings(true);
 	//Hook na zmiane kolorystyki AlphaControls
-	PluginLink.HookEvent(AQQ_SYSTEM_COLORCHANGE,OnColorChange);
+	PluginLink.HookEvent(AQQ_SYSTEM_COLORCHANGE, OnColorChange);
 	//Hook na zmianê kompozycji
-	PluginLink.HookEvent(AQQ_SYSTEM_THEMECHANGED,OnThemeChanged);
+	PluginLink.HookEvent(AQQ_SYSTEM_THEMECHANGED, OnThemeChanged);
 	//Hook na zaladowanie wszystkich modulow w AQQ
-	PluginLink.HookEvent(AQQ_SYSTEM_MODULESLOADED,OnModulesLoaded);
+	PluginLink.HookEvent(AQQ_SYSTEM_MODULESLOADED, OnModulesLoaded);
 	//Jezeli wszystkie moduly w AQQ zostaly juz zaladowany przed wczytaniem wtyczki
-	if(PluginLink.CallService(AQQ_SYSTEM_MODULESLOADED,0,0))
+	if(PluginLink.CallService(AQQ_SYSTEM_MODULESLOADED, 0, 0))
 	{
 		//Jezeli nie skonfigurowano jeszcze wtyczki
 		if(!FileExists(SettingsFileDir))
