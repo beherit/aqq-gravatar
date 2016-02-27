@@ -8,14 +8,14 @@ Znalezione błędy wtyczki należy zgłaszać na [tracekerze](http://forum.aqq.e
 
 Kontakt z autorem
 -------
-Autorem wtyczki Gravatar jest Krzysztof Grochocki. Możesz skontaktować się z nim drogą mailową (kontakt@beherit.pl) lub poprzez Jabber (im@beherit.pl).
+Autorem wtyczki Gravatar jest Krzysztof Grochocki. Możesz skontaktować się z nim poprzez XMPP pisząc na im@beherit.pl.
 
 Licencja
 -------
 Wtyczka Gravatar objęta jest licencją [GNU General Public License 3](http://www.gnu.org/copyleft/gpl.html).
 
     Gravatar
-    Copyright (C) 2010-2014  Krzysztof Grochocki
+    Copyright (C) 2010-2016  Krzysztof Grochocki
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
