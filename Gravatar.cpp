@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------------
-// Copyright (C) 2010-2015 Krzysztof Grochocki
+// Copyright (C) 2010-2016 Krzysztof Grochocki
 //
 // This file is part of Gravatar
 //
@@ -822,9 +822,9 @@ extern "C" __declspec(dllexport) PPluginInfo __stdcall AQQPluginInfo(DWORD AQQVe
 	PluginInfo.Version = PLUGIN_MAKE_VERSION(1,4,0,0);
 	PluginInfo.Description = L"Wtyczka pilnuje, aby we wszystkich sieciach by³ ustawiony zawsze aktualny awatar okreœlony w serwisie gravatar.com.";
 	PluginInfo.Author = L"Krzysztof Grochocki";
-	PluginInfo.AuthorMail = L"kontakt@beherit.pl";
+	PluginInfo.AuthorMail = L"contact@beherit.pl";
 	PluginInfo.Copyright = L"Krzysztof Grochocki";
-	PluginInfo.Homepage = L"http://beherit.pl";
+	PluginInfo.Homepage = L"beherit.pl";
 
 	return &PluginInfo;
 }
